@@ -10,4 +10,8 @@
       <PackageReference Include="Redis.OM" Version="0.1.9" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NotesApp.Domain\NotesApp.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
