@@ -10,4 +10,9 @@
       <PackageReference Include="MediatR" Version="10.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NotesApp.Domain\NotesApp.Domain.csproj" />
+      <ProjectReference Include="..\NotesApp.Infrastructure.Data\NotesApp.Infrastructure.Data.csproj" />
+    </ItemGroup>
+
 </Project>
