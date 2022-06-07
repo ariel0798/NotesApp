@@ -8,11 +8,16 @@
 
     <ItemGroup>
         <PackageReference Include="Redis.OM" Version="0.1.9" />
+        <PackageReference Include="Scrutor" Version="4.2.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Controllers" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NotesApp.Infrastructure.Data\NotesApp.Infrastructure.Data.csproj" />
     </ItemGroup>
 
 </Project>
