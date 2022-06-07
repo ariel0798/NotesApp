@@ -1,4 +1,4 @@
-namespace NotesApp.Api.Registrars;
+namespace NotesApp.Api.Registrars.Builder;
 
 public class SwaggerRegistrar : IWebApplicationBuilderRegistrar
 {
