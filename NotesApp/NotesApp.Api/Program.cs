@@ -3,7 +3,6 @@ using NotesApp.Api.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.RegisterServices(typeof(Program));
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
