@@ -1,9 +1,8 @@
 using MediatR;
 using AutoMapper;
-using System.Text.Json;
-using System.Security.Cryptography;
 using NotesApp.ApplicationCore.Commands.User;
 using NotesApp.ApplicationCore.Dtos.User;
+using NotesApp.ApplicationCore.Helper.Interfaces;
 using NotesApp.ApplicationCore.Interfaces;
 
 namespace NotesApp.ApplicationCore.Services;
@@ -12,16 +11,18 @@ public class UserService : IUserService
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
+    private readonly IPasswordHashHelper _passwordHashHelper;
 
-    public UserService(IMediator mediator, IMapper mapper)
+    public UserService(IMediator mediator, IMapper mapper, IPasswordHashHelper passwordHashHelper)
     {
         _mediator = mediator;
         _mapper = mapper;
+        _passwordHashHelper = passwordHashHelper;
     }
 
     public async Task<string> RegisterUser(RegisterUserDto userDto)
     {
-        CreatePasswordHash(userDto.Password, out string passwordHash, out string passwordSalt);
+        _passwordHashHelper.CreatePasswordHash(userDto.Password, out string passwordHash, out string passwordSalt);
 
         var createUserCommand = _mapper.Map<CreateUserCommand>(userDto);
         
@@ -34,19 +35,5 @@ public class UserService : IUserService
 
         var user = await _mediator.Send(createUserCommand);
         return user.Id;
-    }
-    
-    private void CreatePasswordHash(string password,out string passwordHash, out string passwordSalt)
-    {
-        using var hmac = new HMACSHA512();
-        var salt = hmac.Key;
-        var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-
-        passwordHash = Base64Encode(JsonSerializer.Serialize(hash));
-        passwordSalt = Base64Encode(JsonSerializer.Serialize(salt));
-    }
-    private static string Base64Encode(string plainText) {
-        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-        return Convert.ToBase64String(plainTextBytes);
     }
 }
