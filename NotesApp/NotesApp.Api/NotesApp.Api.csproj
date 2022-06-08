@@ -15,10 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\NotesApp.ApplicationCore\NotesApp.ApplicationCore.csproj" />
       <ProjectReference Include="..\NotesApp.Infrastructure.Data\NotesApp.Infrastructure.Data.csproj" />
     </ItemGroup>
