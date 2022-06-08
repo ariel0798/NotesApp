@@ -9,11 +9,19 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="11.0.1" />
       <PackageReference Include="MediatR" Version="10.0.1" />
+      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.19.0" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.19.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\NotesApp.Domain\NotesApp.Domain.csproj" />
       <ProjectReference Include="..\NotesApp.Infrastructure.Data\NotesApp.Infrastructure.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+        <HintPath>..\..\..\..\..\..\usr\share\dotnet\shared\Microsoft.AspNetCore.App\6.0.5\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
