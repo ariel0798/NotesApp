@@ -4,6 +4,7 @@ using NotesApp.ApplicationCore.Commands.User;
 using NotesApp.ApplicationCore.Dtos.User;
 using NotesApp.ApplicationCore.Helper.Interfaces;
 using NotesApp.ApplicationCore.Interfaces;
+using NotesApp.ApplicationCore.Queries.User;
 
 namespace NotesApp.ApplicationCore.Services;
 
@@ -12,12 +13,14 @@ public class UserService : IUserService
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly IPasswordHashHelper _passwordHashHelper;
+    private readonly IJwtHelper _jwtHelper;
 
-    public UserService(IMediator mediator, IMapper mapper, IPasswordHashHelper passwordHashHelper)
+    public UserService(IMediator mediator, IMapper mapper, IPasswordHashHelper passwordHashHelper, IJwtHelper jwtHelper)
     {
         _mediator = mediator;
         _mapper = mapper;
         _passwordHashHelper = passwordHashHelper;
+        _jwtHelper = jwtHelper;
     }
 
     public async Task<string> RegisterUser(RegisterUserDto userDto)
@@ -35,5 +38,20 @@ public class UserService : IUserService
 
         var user = await _mediator.Send(createUserCommand);
         return user.Id;
+    }
+
+    public async Task<string?> LoginUser(LoginUserDto userDto)
+    {
+        var user = await  _mediator.Send(new GetUserByEmailQuery(userDto.Email));
+
+        if (user == null)
+            return null;
+
+        if (!_passwordHashHelper.VerifyPasswordHash(userDto.Password, user.PasswordHash, user.PasswordSalt))
+            return null;
+
+        var token = _jwtHelper.CreateToken(user.Email);
+
+        return token;
     }
 }
