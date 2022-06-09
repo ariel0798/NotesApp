@@ -1,9 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NotesApp.ApplicationCore.Dtos.User;
 using NotesApp.ApplicationCore.Helper.Interfaces;
+using NotesApp.ApplicationCore.Models;
 
 namespace NotesApp.ApplicationCore.Helper;
 
@@ -35,7 +37,17 @@ public class JwtHelper : IJwtHelper
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-        return jwt;
-                
+        return jwt;    
+    }
+
+    public JwtToken GenerateRefreshToken()
+    {
+        var refreshToken = new JwtToken()
+        {
+            RefreshToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+            Expires = DateTime.Now.AddDays(7),
+            Created = DateTime.Now
+        };
+        return refreshToken;
     }
 }
