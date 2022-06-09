@@ -42,7 +42,9 @@ public class UserService : IUserService
 
     public async Task<string?> LoginUser(LoginUserDto userDto)
     {
-        var user = await  _mediator.Send(new GetUserByEmailQuery(userDto.Email));
+        var query = new GetUserByEmailQuery() 
+            { Email = userDto.Email };
+        var user = await  _mediator.Send(query);
 
         if (user == null)
             return null;
