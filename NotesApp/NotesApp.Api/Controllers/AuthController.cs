@@ -19,4 +19,15 @@ public class AuthController : Controller
         var result = await _userService.RegisterUser(userDto);
         return Ok(result);
     }
+    
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginUserDto userDto)
+    {
+        var result = await _userService.LoginUser(userDto);
+
+        if (result == null)
+            return Unauthorized();
+
+        return Ok(result);
+    }
 }
