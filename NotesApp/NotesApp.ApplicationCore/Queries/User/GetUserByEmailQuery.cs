@@ -1,7 +1,9 @@
+using System.Security.AccessControl;
 using MediatR;
 
 namespace NotesApp.ApplicationCore.Queries.User;
 
-public record GetUserByEmailQuery (string email) : IRequest<Domain.Models.User>
+public class GetUserByEmailQuery : IRequest<Domain.Models.User>
 {
+    public string Email { get; init; }
 }
