@@ -1,6 +1,4 @@
-using System.Buffers.Text;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using NotesApp.ApplicationCore.Helper.Interfaces;
 
@@ -19,18 +17,21 @@ public class PasswordHashHelper : IPasswordHashHelper
     }
     public bool VerifyPasswordHash(string password, string passwordHash, string passwordSalt)
     {
-        using var hmac = new HMACSHA512(Base64Decode(passwordSalt));
+        var salt = JsonSerializer.Deserialize<byte[]>(Base64Decode(passwordSalt));
+        var hash = JsonSerializer.Deserialize<byte[]>(Base64Decode(passwordHash));
+        
+        using var hmac = new HMACSHA512(salt);
         var computerHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-        return computerHash.SequenceEqual(Base64Decode(passwordHash));
+        return computerHash.SequenceEqual(hash);
     }
     private static string Base64Encode(string plainText) {
         var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
         return Convert.ToBase64String(plainTextBytes);
     }
 
-    private static byte[] Base64Decode(string base64Text)
+    private static string Base64Decode(string base64EncodedData)
     {
-        var valueBytes = Convert.FromBase64String(base64Text);
-        return valueBytes;
+        var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+        return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
     }
 }
