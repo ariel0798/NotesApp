@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NotesApp.ApplicationCore.Dtos.User;
 using NotesApp.ApplicationCore.Interfaces;
+using NotesApp.ApplicationCore.Models;
 
 namespace NotesApp.Api.Controllers;
 
@@ -27,7 +28,20 @@ public class AuthController : Controller
 
         if (result == null)
             return Unauthorized();
+        
+        SetRefreshToken(result);
 
-        return Ok(result);
+        return Ok(result.Token);
+    }
+
+    private void SetRefreshToken(JwtToken refreshToken)
+    {
+        var cookieOption = new CookieOptions()
+        {
+            HttpOnly = true,
+            Expires = refreshToken.Expires
+        };
+        
+        Response.Cookies.Append("refreshToken", refreshToken.RefreshToken, cookieOption);
     }
 }

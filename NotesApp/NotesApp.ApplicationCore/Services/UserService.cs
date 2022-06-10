@@ -4,6 +4,7 @@ using NotesApp.ApplicationCore.Commands.User;
 using NotesApp.ApplicationCore.Dtos.User;
 using NotesApp.ApplicationCore.Helper.Interfaces;
 using NotesApp.ApplicationCore.Interfaces;
+using NotesApp.ApplicationCore.Models;
 using NotesApp.ApplicationCore.Queries.User;
 
 namespace NotesApp.ApplicationCore.Services;
@@ -40,7 +41,7 @@ public class UserService : IUserService
         return user.Id;
     }
 
-    public async Task<string?> LoginUser(LoginUserDto userDto)
+    public async Task<JwtToken?> LoginUser(LoginUserDto userDto)
     {
         var query = new GetUserByEmailQuery() 
             { Email = userDto.Email };
@@ -54,6 +55,9 @@ public class UserService : IUserService
 
         var token = _jwtHelper.CreateToken(user.Email);
 
-        return token;
+        var refreshToken = _jwtHelper.GenerateRefreshToken();
+        refreshToken.Token = token;
+        
+        return refreshToken;
     }
 }
