@@ -3,7 +3,7 @@ using NotesApp.ApplicationCore.Models;
 
 namespace NotesApp.ApplicationCore.Interfaces;
 
-public interface IUserService
+public interface IAuthService
 {
     Task<string> RegisterUser(RegisterUserDto userDto);
     Task<JwtToken?> LoginUser(LoginUserDto userDto);
