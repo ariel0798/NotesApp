@@ -14,9 +14,16 @@ public class User
     public string Email { get; set; }
     public string PasswordHash { get; set; } = string.Empty;
     public string PasswordSalt { get; set; } = string.Empty;
-    public string RefreshToken { get; set; } = string.Empty;
-    public DateTime TokenCreated { get; set; } 
-    public DateTime TokenExpires { get; set; }
-    public DateTime UserCreated { get; set; } = DateTime.Now;
-    public string NoteId { get; set; } 
+    public string RefreshToken { get; private set; } 
+    public DateTime TokenCreated { get; private set; } 
+    public DateTime TokenExpires { get; private set; }
+    public DateTime UserCreated { get; } = DateTime.Now;
+    public string NoteId { get; set; }
+
+    public void AddToken(string refreshToken, DateTime created, DateTime expires)
+    {
+        RefreshToken = refreshToken;
+        TokenCreated = created;
+        TokenExpires = expires;
+    }
 }
