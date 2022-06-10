@@ -1,6 +1,6 @@
 using AutoMapper;
-using NotesApp.ApplicationCore.Commands.User;
 using NotesApp.ApplicationCore.Dtos.User;
+using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.Domain.Models;
 
 namespace NotesApp.ApplicationCore.Profiles;

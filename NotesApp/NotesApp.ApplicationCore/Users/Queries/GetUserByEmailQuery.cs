@@ -1,7 +1,6 @@
-using System.Security.AccessControl;
 using MediatR;
 
-namespace NotesApp.ApplicationCore.Queries.User;
+namespace NotesApp.ApplicationCore.Users.Queries;
 
 public class GetUserByEmailQuery : IRequest<Domain.Models.User>
 {
