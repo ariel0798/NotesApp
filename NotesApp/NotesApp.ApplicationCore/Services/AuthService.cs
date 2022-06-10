@@ -57,6 +57,11 @@ public class AuthService : IAuthService
 
         var refreshToken = _jwtHelper.GenerateRefreshToken();
         refreshToken.Token = token;
+
+        var setTokenCommand = _mapper.Map<SetUserTokenCommand>(refreshToken);
+        setTokenCommand.UserId = user.Id;
+
+        await _mediator.Send(setTokenCommand);
         
         return refreshToken;
     }
