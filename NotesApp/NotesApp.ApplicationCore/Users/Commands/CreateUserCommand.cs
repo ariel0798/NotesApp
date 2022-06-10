@@ -1,7 +1,7 @@
 using MediatR;
 using NotesApp.Domain.Models;
 
-namespace NotesApp.ApplicationCore.Commands.User;
+namespace NotesApp.ApplicationCore.Users.Commands;
 
 public class CreateUserCommand : IRequest<Domain.Models.User>
 {

@@ -1,8 +1,8 @@
 using MediatR;
-using NotesApp.ApplicationCore.Queries.User;
+using NotesApp.ApplicationCore.Users.Queries;
 using NotesApp.Domain.Interfaces;
 
-namespace NotesApp.ApplicationCore.Handlers.User.Queries;
+namespace NotesApp.ApplicationCore.Users.QueryHandlers;
 
 public class GetUserByEmailQueryHandler : IRequestHandler<GetUserByEmailQuery,Domain.Models.User>
 {

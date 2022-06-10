@@ -1,9 +1,9 @@
 using AutoMapper;
 using MediatR;
-using NotesApp.ApplicationCore.Commands.User;
+using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.Domain.Interfaces;
 
-namespace NotesApp.ApplicationCore.Handlers.User.Commands;
+namespace NotesApp.ApplicationCore.Users.CommandHandlers;
 
 public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Domain.Models.User>
 {

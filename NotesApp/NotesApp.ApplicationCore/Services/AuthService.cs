@@ -1,11 +1,11 @@
 using MediatR;
 using AutoMapper;
-using NotesApp.ApplicationCore.Commands.User;
 using NotesApp.ApplicationCore.Dtos.User;
 using NotesApp.ApplicationCore.Helper.Interfaces;
 using NotesApp.ApplicationCore.Interfaces;
 using NotesApp.ApplicationCore.Models;
-using NotesApp.ApplicationCore.Queries.User;
+using NotesApp.ApplicationCore.Users.Commands;
+using NotesApp.ApplicationCore.Users.Queries;
 
 namespace NotesApp.ApplicationCore.Services;
 
