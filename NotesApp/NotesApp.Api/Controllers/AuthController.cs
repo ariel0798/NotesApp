@@ -7,24 +7,24 @@ namespace NotesApp.Api.Controllers;
 
 public class AuthController : Controller
 {
-    private readonly IUserService _userService;
+    private readonly IAuthService _authService;
 
-    public AuthController(IUserService userService)
+    public AuthController(IAuthService authService)
     {
-        _userService = userService;
+        _authService = authService;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterUserDto userDto)
     {
-        var result = await _userService.RegisterUser(userDto);
+        var result = await _authService.RegisterUser(userDto);
         return Ok(result);
     }
     
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginUserDto userDto)
     {
-        var result = await _userService.LoginUser(userDto);
+        var result = await _authService.LoginUser(userDto);
 
         if (result == null)
             return Unauthorized();

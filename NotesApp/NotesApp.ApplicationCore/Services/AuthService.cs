@@ -9,14 +9,14 @@ using NotesApp.ApplicationCore.Queries.User;
 
 namespace NotesApp.ApplicationCore.Services;
 
-public class UserService : IUserService
+public class AuthService : IAuthService
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly IPasswordHashHelper _passwordHashHelper;
     private readonly IJwtHelper _jwtHelper;
 
-    public UserService(IMediator mediator, IMapper mapper, IPasswordHashHelper passwordHashHelper, IJwtHelper jwtHelper)
+    public AuthService(IMediator mediator, IMapper mapper, IPasswordHashHelper passwordHashHelper, IJwtHelper jwtHelper)
     {
         _mediator = mediator;
         _mapper = mapper;
