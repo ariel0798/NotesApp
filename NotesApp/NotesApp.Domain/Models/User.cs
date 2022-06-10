@@ -14,6 +14,7 @@ public class User
     public string Email { get; set; }
     public string PasswordHash { get; set; } = string.Empty;
     public string PasswordSalt { get; set; } = string.Empty;
+    [Searchable(Sortable = true)]
     public string RefreshToken { get; private set; } 
     public DateTime TokenCreated { get; private set; } 
     public DateTime TokenExpires { get; private set; }
