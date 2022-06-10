@@ -3,7 +3,7 @@ using NotesApp.Domain.Models;
 
 namespace NotesApp.ApplicationCore.Users.Commands;
 
-public class CreateUserCommand : IRequest<Domain.Models.User>
+public class CreateUserCommand : IRequest<User>
 {
     public string Id{ get; set; }
     public string Name { get; set; }

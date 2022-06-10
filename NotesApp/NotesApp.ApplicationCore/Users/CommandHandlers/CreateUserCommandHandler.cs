@@ -2,10 +2,11 @@ using AutoMapper;
 using MediatR;
 using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.Domain.Interfaces;
+using NotesApp.Domain.Models;
 
 namespace NotesApp.ApplicationCore.Users.CommandHandlers;
 
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Domain.Models.User>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
@@ -15,9 +16,9 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Domai
         _userRepository = userRepository;
         _mapper = mapper;
     }
-    public async Task<Domain.Models.User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = _mapper.Map<Domain.Models.User>(request);
+        var user = _mapper.Map<User>(request);
        await  _userRepository.Create(user);
        return user;
     }
