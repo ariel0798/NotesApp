@@ -7,5 +7,5 @@ public interface IAuthService
 {
     Task<string> RegisterUser(RegisterUserDto userDto);
     Task<JwtToken?> LoginUser(LoginUserDto userDto);
-    Task<JwtToken?> RefreshToken(string email, string refreshToken);
+    Task<JwtToken?> RefreshToken(string refreshToken);
 }
