@@ -1,7 +1,7 @@
 using NotesApp.ApplicationCore.Dtos.User;
 using NotesApp.ApplicationCore.Models;
 
-namespace NotesApp.ApplicationCore.Interfaces;
+namespace NotesApp.ApplicationCore.Services.AuthService;
 
 public interface IAuthService
 {

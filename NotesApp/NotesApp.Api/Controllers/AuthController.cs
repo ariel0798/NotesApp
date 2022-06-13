@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NotesApp.ApplicationCore.Dtos.User;
-using NotesApp.ApplicationCore.Interfaces;
 using NotesApp.ApplicationCore.Models;
+using NotesApp.ApplicationCore.Services.AuthService;
 
 namespace NotesApp.Api.Controllers;
 
