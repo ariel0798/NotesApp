@@ -59,10 +59,13 @@ public class AuthService : IAuthService
         return fullToken;
     }
 
-    public async Task<JwtToken?> RefreshToken(string email, string refreshToken)
+    public async Task<JwtToken?> RefreshToken(string refreshToken)
     {
-        var query = new GetUserByEmailQuery() 
-            { Email = email };
+        var query = new GetUserByRefreshTokenQuery()
+        {
+            RefreshToken = refreshToken
+        };
+        
         var user = await  _mediator.Send(query);
         
         if (user == null)
