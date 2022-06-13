@@ -2,13 +2,13 @@ using MediatR;
 using AutoMapper;
 using NotesApp.ApplicationCore.Dtos.User;
 using NotesApp.ApplicationCore.Helper.Interfaces;
-using NotesApp.ApplicationCore.Interfaces;
+
 using NotesApp.ApplicationCore.Models;
 using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.ApplicationCore.Users.Queries;
 using NotesApp.Domain.Models;
 
-namespace NotesApp.ApplicationCore.Services;
+namespace NotesApp.ApplicationCore.Services.AuthService;
 
 public class AuthService : IAuthService
 {
