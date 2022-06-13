@@ -34,6 +34,21 @@ public class AuthController : Controller
         return Ok(result.Token);
     }
 
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken()
+    {
+        var refreshToken = Request.Cookies["refreshToken"];
+
+        var result = await _authService.RefreshToken(refreshToken);
+        
+        if (result == null)
+            return Unauthorized();
+        
+        SetRefreshToken(result);
+
+        return Ok(result.Token);
+    }
+
     private void SetRefreshToken(JwtToken refreshToken)
     {
         var cookieOption = new CookieOptions()
