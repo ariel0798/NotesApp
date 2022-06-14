@@ -5,6 +5,7 @@ using NotesApp.ApplicationCore.Dtos.User;
 using NotesApp.ApplicationCore.Helper.Interfaces;
 using Microsoft.AspNetCore.Http;
 using NotesApp.ApplicationCore.Models;
+using NotesApp.ApplicationCore.Notes.Commands;
 using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.ApplicationCore.Users.Queries;
 using NotesApp.Domain.Models;
@@ -41,9 +42,12 @@ public class AuthService : IAuthService
         
         createUserCommand.TokenCreated = DateTime.Now;
         createUserCommand.TokenExpires = DateTime.Now;
-        createUserCommand.NoteId = "";
+
 
         var user = await _mediator.Send(createUserCommand);
+        
+        CreateNote(user);
+        
         return user.Id;
     }
 
@@ -100,5 +104,18 @@ public class AuthService : IAuthService
         await _mediator.Send(setTokenCommand);
 
         return fullToken;
+    }
+    
+    private async Task<User> CreateNote(User user)
+    {
+        var note = await _mediator.Send(new CreateNoteCommand());
+
+        var command = new AddUserNoteIdCommand()
+        {
+            User = user, 
+            NoteId = note.Id
+        };
+
+        return await _mediator.Send(command);
     }
 }
