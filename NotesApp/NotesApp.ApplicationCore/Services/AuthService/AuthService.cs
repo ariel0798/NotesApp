@@ -1,8 +1,9 @@
+using System.Security.Claims;
 using MediatR;
 using AutoMapper;
 using NotesApp.ApplicationCore.Dtos.User;
 using NotesApp.ApplicationCore.Helper.Interfaces;
-
+using Microsoft.AspNetCore.Http;
 using NotesApp.ApplicationCore.Models;
 using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.ApplicationCore.Users.Queries;
@@ -16,15 +17,19 @@ public class AuthService : IAuthService
     private readonly IMapper _mapper;
     private readonly IPasswordHashHelper _passwordHashHelper;
     private readonly IJwtHelper _jwtHelper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AuthService(IMediator mediator, IMapper mapper, IPasswordHashHelper passwordHashHelper, IJwtHelper jwtHelper)
+    public AuthService(IMediator mediator, IMapper mapper, IPasswordHashHelper passwordHashHelper, IJwtHelper jwtHelper,
+        IHttpContextAccessor contextAccessor)
     {
         _mediator = mediator;
         _mapper = mapper;
         _passwordHashHelper = passwordHashHelper;
         _jwtHelper = jwtHelper;
+        _httpContextAccessor = contextAccessor;
     }
 
+    public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name); 
     public async Task<string> RegisterUser(RegisterUserDto userDto)
     {
         _passwordHashHelper.CreatePasswordHash(userDto.Password, out string passwordHash, out string passwordSalt);
