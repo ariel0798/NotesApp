@@ -5,6 +5,8 @@ using NotesApp.ApplicationCore.Services.AuthService;
 
 namespace NotesApp.Api.Controllers;
 
+[Route("api/[controller]")]
+[ApiController]
 public class AuthController : Controller
 {
     private readonly IAuthService _authService;
