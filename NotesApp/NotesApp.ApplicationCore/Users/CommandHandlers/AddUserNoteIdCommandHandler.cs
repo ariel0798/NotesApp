@@ -15,7 +15,7 @@ public class AddUserNoteIdCommandHandler : IRequestHandler<AddUserNoteIdCommand,
     }
     public async Task<User> Handle(AddUserNoteIdCommand request, CancellationToken cancellationToken)
     {
-        request.User.AddNoteId(request.NoteId);
+        request.User.NoteId = request.NoteId;
 
         await _userRepository.Update(request.User);
 
