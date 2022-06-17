@@ -6,6 +6,7 @@ using NotesApp.ApplicationCore.Services.NoteServices;
 namespace NotesApp.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class NoteController : Controller
 {
     private readonly INoteService _noteService;
@@ -16,7 +17,7 @@ public class NoteController : Controller
     }
     
     [HttpPost]
-    [Authorize]
+    
     public async Task<IActionResult> CreateNoteDetail(CreateNoteDto noteDto)
     {
         var result = await _noteService.CreateNote(noteDto);
