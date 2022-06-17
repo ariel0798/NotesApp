@@ -25,6 +25,19 @@ public class NoteService : INoteService
     
     public async Task<NoteDetail> CreateNote(CreateNoteDto noteDto)
     {
+        var noteId = await GetNoteId();
+
+        if (noteId == null)
+            return null;
+        
+        var command = _mapper.Map <CreateNoteDetailCommand>(noteDto);
+        command.NoteId = noteId;
+
+        return await _mediator.Send(command);
+    }
+
+    private async Task<string?> GetNoteId()
+    {
         var userQuery = new GetUserByEmailQuery() { Email = _authService.GetUserEmail() };
 
         var user = await _mediator.Send(userQuery);
@@ -34,15 +47,9 @@ public class NoteService : INoteService
             return null;
 
         var isExistingNote = await IsExistingNote(user.NoteId);
-        if (!isExistingNote)
-            return null;
-
-        var command = _mapper.Map <CreateNoteDetailCommand>(noteDto);
-        command.NoteId = user.NoteId;
-
-        return await _mediator.Send(command);
+        
+        return isExistingNote ? user.NoteId : null;
     }
-
     private async Task<bool> IsExistingNote(string noteId)
     {
         var query = new NoteIdExistQuery()
