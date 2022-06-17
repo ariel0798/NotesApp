@@ -18,8 +18,10 @@ public class CreateNoteDetailCommandHandler : IRequestHandler<CreateNoteDetailCo
     }
     public async Task<NoteDetail> Handle(CreateNoteDetailCommand request, CancellationToken cancellationToken)
     {
-        var note = await _noteRepository.FindFirstByCondition(n => n.Id == request.NoteId);
+        var note = await _noteRepository.GetById(request.NoteId);
 
+        note.Notes ??= new List<NoteDetail>();
+        
         var noteDetail = _mapper.Map<NoteDetail>(request);
         note.Notes.Add(noteDetail);
 

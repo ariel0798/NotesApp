@@ -14,6 +14,6 @@ public class NoteIdExistQueryHandler : IRequestHandler<NoteIdExistQuery,bool>
     }
     public async Task<bool> Handle(NoteIdExistQuery request, CancellationToken cancellationToken)
     {
-        return await _noteRepository.Any(n => n.Id == request.Id);
+        return await _noteRepository.GetById(request.Id) != null ? true : false;
     }
 }
