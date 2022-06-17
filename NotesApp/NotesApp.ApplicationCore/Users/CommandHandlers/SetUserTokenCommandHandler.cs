@@ -16,9 +16,11 @@ public class SetUserTokenCommandHandler : IRequestHandler<SetUserTokenCommand,Us
     public async Task<User> Handle(SetUserTokenCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetById(request.UserId);
-        
-        user.AddToken(request.RefreshToken , request.TokenCreated,request.TokenExpires);
 
+        user.RefreshToken = request.RefreshToken;
+        user.TokenCreated = request.TokenCreated;
+        user.TokenExpires = request.TokenExpires;
+        
         await _userRepository.Update(user);
         
         return user;

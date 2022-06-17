@@ -20,8 +20,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
     {
         var user = _mapper.Map<User>(request);
         
-        user.SetPassword(request.PasswordHash, request.PasswordSalt);
-        user.AddEmail(request.Email);
        await  _userRepository.Create(user);
        return user;
     }
