@@ -23,6 +23,7 @@ public class CreateNoteDetailCommandHandler : IRequestHandler<CreateNoteDetailCo
         note.NoteDetails ??= new List<NoteDetail>();
         
         var noteDetail = _mapper.Map<NoteDetail>(request);
+        noteDetail.NoteDetailId =  Guid.NewGuid().ToString();
         note.NoteDetails.Add(noteDetail);
 
         await _noteRepository.Update(note);
