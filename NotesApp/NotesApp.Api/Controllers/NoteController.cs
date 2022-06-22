@@ -25,9 +25,9 @@ public class NoteController : Controller
     }
 
     [HttpGet("{noteDetailId}")]
-    public async Task<IActionResult> ReadNoteDetail(string noteDetailId)
+    public async Task<IActionResult> ReadNoteDetailById(string noteDetailId)
     {
-        var result = await _noteService.ReadNote(noteDetailId);
+        var result = await _noteService.ReadNoteById(noteDetailId);
         return Ok(result);
     }
 }
