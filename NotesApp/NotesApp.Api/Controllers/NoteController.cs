@@ -20,14 +20,14 @@ public class NoteController : Controller
     
     public async Task<IActionResult> CreateNoteDetail(CreateNoteDto noteDto)
     {
-        var result = await _noteService.CreateNote(noteDto);
+        var result = await _noteService.CreateNoteDetail(noteDto);
         return Ok(result);
     }
 
     [HttpGet("{noteDetailId}")]
-    public async Task<IActionResult> ReadNoteDetailById(string noteDetailId)
+    public async Task<IActionResult> GetNoteDetailById(string noteDetailId)
     {
-        var result = await _noteService.ReadNoteById(noteDetailId);
+        var result = await _noteService.GetNoteDetailById(noteDetailId);
         return Ok(result);
     }
 }

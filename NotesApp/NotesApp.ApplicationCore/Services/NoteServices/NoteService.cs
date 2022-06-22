@@ -23,7 +23,7 @@ public class NoteService : INoteService
     }
     
     
-    public async Task<NoteDetail> CreateNote(CreateNoteDto noteDto)
+    public async Task<NoteDetail> CreateNoteDetail(CreateNoteDto noteDto)
     {
         var noteId = await GetNoteId();
 
@@ -35,9 +35,8 @@ public class NoteService : INoteService
 
         return await _mediator.Send(command);
     }
-
     
-    public async Task<NoteDetail?> ReadNoteById(string noteDetailId)
+    public async Task<NoteDetail?> GetNoteDetailById(string noteDetailId)
     {
         var noteId = await GetNoteId();
         
