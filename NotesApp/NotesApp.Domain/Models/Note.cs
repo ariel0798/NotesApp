@@ -1,4 +1,3 @@
-using System.Reflection.Metadata;
 using Redis.OM.Modeling;
 
 namespace NotesApp.Domain.Models;
@@ -6,7 +5,6 @@ namespace NotesApp.Domain.Models;
 [Document(Prefixes = new []{"Note"})]
 public class Note
 {
-    [RedisIdField]
-    public string Id{ get; set; }
-    public List<NoteDetail> Notes { get; set; }
+    public string Id { get; set; } = Ulid.NewUlid().ToString();
+    public List<NoteDetail> NoteDetails { get; set; }
 }
