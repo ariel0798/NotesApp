@@ -23,7 +23,7 @@ public class NoteService : INoteService
     }
     
     
-    public async Task<NoteDetail> CreateNoteDetail(CreateNoteDto noteDto)
+    public async Task<GetNoteDetailDto> CreateNoteDetail(CreateNoteDto noteDto)
     {
         var noteId = await GetNoteId();
 
@@ -33,10 +33,14 @@ public class NoteService : INoteService
         var command = _mapper.Map <CreateNoteDetailCommand>(noteDto);
         command.NoteId = noteId;
 
-        return await _mediator.Send(command);
+        var noteDetail = await _mediator.Send(command);
+
+        var noteDetailDto = _mapper.Map<GetNoteDetailDto>(noteDetail);
+        
+        return noteDetailDto;
     }
 
-    public async Task<List<NoteDetail>> GetAllNoteDetails()
+    public async Task<List<GetNoteDetailDto>> GetAllNoteDetails()
     {
         var noteId = await GetNoteId();
         
@@ -47,9 +51,10 @@ public class NoteService : INoteService
 
         var note = await _mediator.Send(query);
 
-        return note.NoteDetails;
+        var noteDetailsDto = _mapper.Map<List<GetNoteDetailDto>>(note.NoteDetails);
+        return noteDetailsDto;
     }
-    public async Task<NoteDetail?> GetNoteDetailById(string noteDetailId)
+    public async Task<GetNoteDetailDto?> GetNoteDetailById(string noteDetailId)
     {
         var noteId = await GetNoteId();
         
@@ -62,7 +67,11 @@ public class NoteService : INoteService
             NoteDetailId = noteDetailId
         };
 
-        return await _mediator.Send(query);
+        var noteDetail = await _mediator.Send(query);
+        
+        var noteDetailDto = _mapper.Map<GetNoteDetailDto>(noteDetail);
+        
+        return noteDetailDto;
     }
 
 
