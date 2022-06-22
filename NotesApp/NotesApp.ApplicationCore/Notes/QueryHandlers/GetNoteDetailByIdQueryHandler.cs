@@ -17,6 +17,6 @@ public class GetNoteDetailByIdQueryHandler : IRequestHandler<GetNoteDetailByIdQu
     public async Task<NoteDetail> Handle(GetNoteDetailByIdQuery request, CancellationToken cancellationToken)
     {
         var note = await _noteRepository.GetById(request.NoteId);
-        return note.Notes.FirstOrDefault(n => n.NoteDetailId.ToString() == request.NoteDetailId);
+        return note.NoteDetails.FirstOrDefault(n => n.NoteDetailId.ToString() == request.NoteDetailId);
     }
 }

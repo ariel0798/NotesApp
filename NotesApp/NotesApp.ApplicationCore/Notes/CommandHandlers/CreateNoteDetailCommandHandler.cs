@@ -20,10 +20,10 @@ public class CreateNoteDetailCommandHandler : IRequestHandler<CreateNoteDetailCo
     {
         var note = await _noteRepository.GetById(request.NoteId);
 
-        note.Notes ??= new List<NoteDetail>();
+        note.NoteDetails ??= new List<NoteDetail>();
         
         var noteDetail = _mapper.Map<NoteDetail>(request);
-        note.Notes.Add(noteDetail);
+        note.NoteDetails.Add(noteDetail);
 
         await _noteRepository.Update(note);
         return noteDetail;
