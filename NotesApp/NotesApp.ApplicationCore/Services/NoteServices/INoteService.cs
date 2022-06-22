@@ -7,4 +7,5 @@ public interface INoteService
 {
     Task<NoteDetail> CreateNoteDetail(CreateNoteDto noteDto);
     Task<NoteDetail?> GetNoteDetailById(string noteDetailId);
+    Task<List<NoteDetail>> GetAllNoteDetails();
 }

@@ -35,7 +35,20 @@ public class NoteService : INoteService
 
         return await _mediator.Send(command);
     }
-    
+
+    public async Task<List<NoteDetail>> GetAllNoteDetails()
+    {
+        var noteId = await GetNoteId();
+        
+        if (noteId == null)
+            return null;
+
+        var query = new GetNoteByIdQuery() { NoteId = noteId };
+
+        var note = await _mediator.Send(query);
+
+        return note.NoteDetails;
+    }
     public async Task<NoteDetail?> GetNoteDetailById(string noteDetailId)
     {
         var noteId = await GetNoteId();
