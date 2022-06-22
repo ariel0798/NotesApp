@@ -36,7 +36,8 @@ public class NoteService : INoteService
         return await _mediator.Send(command);
     }
 
-    public async Task<NoteDetail?> ReadNote(string noteDetailId)
+    
+    public async Task<NoteDetail?> ReadNoteById(string noteDetailId)
     {
         var noteId = await GetNoteId();
         
@@ -67,6 +68,7 @@ public class NoteService : INoteService
         
         return  user.NoteId;
     }
+    
     private async Task<bool> IsExistingNote(string noteId)
     {
         var query = new NoteIdExistQuery()
