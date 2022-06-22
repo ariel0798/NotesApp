@@ -36,6 +36,23 @@ public class NoteService : INoteService
         return await _mediator.Send(command);
     }
 
+    public async Task<NoteDetail?> ReadNote(string noteDetailId)
+    {
+        var noteId = await GetNoteId();
+        
+        if (noteId == null)
+            return null;
+
+        var query = new GetNoteDetailByIdQuery()
+        {
+            NoteId = noteId,
+            NoteDetailId = noteDetailId
+        };
+
+        return await _mediator.Send(query);
+    }
+
+
     private async Task<string?> GetNoteId()
     {
         var userQuery = new GetUserByEmailQuery() { Email = _authService.GetUserEmail() };
@@ -48,7 +65,7 @@ public class NoteService : INoteService
 
         var isExistingNote = await IsExistingNote(user.NoteId);
         
-        return isExistingNote ? user.NoteId : null;
+        return  user.NoteId;
     }
     private async Task<bool> IsExistingNote(string noteId)
     {

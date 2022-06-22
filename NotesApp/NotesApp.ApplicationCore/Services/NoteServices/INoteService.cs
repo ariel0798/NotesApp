@@ -6,4 +6,5 @@ namespace NotesApp.ApplicationCore.Services.NoteServices;
 public interface INoteService
 {
     Task<NoteDetail> CreateNote(CreateNoteDto noteDto);
+    Task<NoteDetail?> ReadNote(string noteDetailId);
 }
