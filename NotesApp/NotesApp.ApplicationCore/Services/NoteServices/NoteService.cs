@@ -91,6 +91,24 @@ public class NoteService : INoteService
         
         return noteDetailGetDto;
     }
+
+    public async Task<bool> SoftDeleteNoteDetail(string noteDetailId)
+    {
+        var noteId = await GetNoteId();
+        
+        if (noteId == null)
+            return false;
+
+        var command = new SoftDeleteNoteDetailCommand()
+        {
+            NoteDetailId = noteDetailId,
+            NoteId = noteId
+        };
+
+        var noteDetail = await _mediator.Send(command);
+
+        return noteDetail.IsDeleted;
+    }
     private async Task<string?> GetNoteId()
     {
         var userQuery = new GetUserByEmailQuery() { Email = _authService.GetUserEmail() };
