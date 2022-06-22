@@ -20,7 +20,7 @@ public class User
     public DateTime TokenCreated { get;  set; } 
     public DateTime TokenExpires { get;  set; }
     public DateTime UserCreated { get; } = DateTime.Now;
-    public string? NoteId { get;  set; }
-    
+    public string? NoteId { get; set; } = string.Empty;
+
 
 }
