@@ -37,5 +37,11 @@ public class NoteController : Controller
         var result = await _noteService.GetNoteDetailById(noteDetailId);
         return Ok(result);
     }
-    
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateNoteDetail(UpdateNoteDetailDto noteDetailDto)
+    {
+        var result = await _noteService.UpdateNoteDetail(noteDetailDto);
+        return Ok(result);
+    }
 }

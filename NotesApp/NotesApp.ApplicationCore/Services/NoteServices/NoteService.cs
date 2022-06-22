@@ -74,7 +74,23 @@ public class NoteService : INoteService
         return noteDetailDto;
     }
 
+    public async Task<GetNoteDetailDto> UpdateNoteDetail(UpdateNoteDetailDto noteDetailDto)
+    {
+        var noteId = await GetNoteId();
+        
+        if (noteId == null)
+            return null;
 
+        var command = _mapper.Map<UpdateNoteDetailCommand>(noteDetailDto);
+
+        command.NoteId = noteId;
+        
+        var noteDetail = await _mediator.Send(command);
+        
+        var noteDetailGetDto = _mapper.Map<GetNoteDetailDto>(noteDetail);
+        
+        return noteDetailGetDto;
+    }
     private async Task<string?> GetNoteId()
     {
         var userQuery = new GetUserByEmailQuery() { Email = _authService.GetUserEmail() };
