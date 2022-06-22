@@ -12,5 +12,6 @@ public class NoteProfile : Profile
         CreateMap<CreateNoteDto, CreateNoteDetailCommand>();
         CreateMap<CreateNoteDetailCommand, NoteDetail>();
         CreateMap<NoteDetail, GetNoteDetailDto>(MemberList.Destination);
+        CreateMap<UpdateNoteDetailDto, UpdateNoteDetailCommand>();
     }
 }
