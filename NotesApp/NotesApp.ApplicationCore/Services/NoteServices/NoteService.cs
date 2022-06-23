@@ -5,7 +5,6 @@ using NotesApp.ApplicationCore.Notes.Commands;
 using NotesApp.ApplicationCore.Notes.Queries;
 using NotesApp.ApplicationCore.Services.AuthService;
 using NotesApp.ApplicationCore.Users.Queries;
-using NotesApp.Domain.Models;
 
 namespace NotesApp.ApplicationCore.Services.NoteServices;
 
@@ -51,7 +50,24 @@ public class NoteService : INoteService
 
         var note = await _mediator.Send(query);
 
-        var noteDetailsDto = _mapper.Map<List<GetNoteDetailDto>>(note.NoteDetails);
+        var noteDetailNonDeleted = note.NoteDetails.Where(n => n.IsDeleted == false);
+        var noteDetailsDto = _mapper.Map<List<GetNoteDetailDto>>(noteDetailNonDeleted);
+        return noteDetailsDto;
+    }
+    
+    public async Task<List<GetNoteDetailDto>> GetAllNoteDetailsTrash()
+    {
+        var noteId = await GetNoteId();
+        
+        if (noteId == null)
+            return null;
+
+        var query = new GetNoteByIdQuery() { NoteId = noteId };
+
+        var note = await _mediator.Send(query);
+
+        var noteDetailNonDeleted = note.NoteDetails.Where(n => n.IsDeleted == true);
+        var noteDetailsDto = _mapper.Map<List<GetNoteDetailDto>>(noteDetailNonDeleted);
         return noteDetailsDto;
     }
     public async Task<GetNoteDetailDto?> GetNoteDetailById(string noteDetailId)

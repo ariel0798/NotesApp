@@ -24,10 +24,17 @@ public class NoteController : Controller
         return Ok(result);
     }
 
-    [HttpGet()]
+    [HttpGet]
     public async Task<IActionResult> GetAllNoteDetails()
     {
         var result = await _noteService.GetAllNoteDetails();
+        return Ok(result);
+    }
+    
+    [HttpGet("trash")]
+    public async Task<IActionResult> GetAllNoteDetailsTrash()
+    {
+        var result = await _noteService.GetAllNoteDetailsTrash();
         return Ok(result);
     }
     
