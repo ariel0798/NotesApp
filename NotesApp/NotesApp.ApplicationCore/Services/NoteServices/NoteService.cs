@@ -125,6 +125,23 @@ public class NoteService : INoteService
 
         return noteDetail.IsDeleted;
     }
+    
+    public async Task<bool> DeleteNoteDetail(string noteDetailId)
+    {
+        var noteId = await GetNoteId();
+        
+        if (noteId == null)
+            return false;
+
+        var command = new DeleteNoteDetailCommand()
+        {
+            NoteDetailId = noteDetailId,
+            NoteId = noteId
+        };
+        await _mediator.Send(command);
+
+        return await _mediator.Send(command) == null ? true : false ;
+    }
     private async Task<string?> GetNoteId()
     {
         var userQuery = new GetUserByEmailQuery() { Email = _authService.GetUserEmail() };

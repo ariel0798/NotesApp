@@ -58,4 +58,11 @@ public class NoteController : Controller
         var result = await _noteService.SoftDeleteNoteDetail(noteDetailId);
         return Ok(result);
     }
+    
+    [HttpDelete("{noteDetailId}")]
+    public async Task<IActionResult> DeleteNoteDetail(string noteDetailId)
+    {
+        var result = await _noteService.DeleteNoteDetail(noteDetailId);
+        return Ok(result);
+    }
 }
