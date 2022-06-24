@@ -11,4 +11,5 @@ public interface INoteService
     Task<List<GetNoteDetailDto>> GetAllNoteDetailsTrash();
     Task<GetNoteDetailDto> UpdateNoteDetail(UpdateNoteDetailDto noteDetailDto);
     Task<bool> SoftDeleteNoteDetail(string noteDetailId);
+    Task<bool> DeleteNoteDetail(string noteDetailId);
 }
