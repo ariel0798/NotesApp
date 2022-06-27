@@ -1,13 +1,18 @@
 version: "3.9"  
 services:
   redis:
-    image: redis/redis-stack
+    image: redis/redis-stack:latest
     ports:
       - "6379:6379"
+      - "8001:8001"
+    container_name: redis
   notes.api:
     image: ${DOCKER_REGISTRY-}notesappapi
+    container_name: notesapi
     build:
       context: .
       dockerfile: NotesApp.Api/Dockerfile
     ports:
-      - "7001:80"
+      - "8007:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
