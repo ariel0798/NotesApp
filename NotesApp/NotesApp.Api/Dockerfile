@@ -1,6 +1,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS base
 WORKDIR /app
 
+EXPOSE 5000
+ENV DOTNET_URLS=http://+:5000
+
 #Copy project files
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
@@ -19,8 +22,6 @@ RUN dotnet build "NotesApp.Api.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "NotesApp.Api.csproj" -c Release -o /app/publish
 
-ENV ASPNETCORE_URLS=http://+:80
-EXPOSE 80
 
 FROM base AS final
 WORKDIR /app
