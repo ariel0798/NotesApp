@@ -8,5 +8,6 @@ public class UserRepository : BaseRepository<User> , IUserRepository
 {
     public UserRepository(RedisConnectionProvider provider) : base(provider)
     {
+        provider.Connection.CreateIndex(typeof(User));
     }
 }
