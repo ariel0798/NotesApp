@@ -80,9 +80,6 @@ public class AuthService : IAuthService
         if (user == null)
             return null;
 
-        if (!user.RefreshToken.Equals(refreshToken))
-            return null;
-
         if (user.TokenExpires < DateTime.Now)
             return null;
         
