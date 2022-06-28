@@ -19,14 +19,14 @@ public class NoteRepository :  INoteRepository
     {
         var stringNote = JsonSerializer.Serialize(obj);
 
-        await _database.StringSetAsync(obj.Id, stringNote);
+        await _database.StringSetAsync(AppendColon(obj.Id), stringNote);
         
         return obj;
     }
 
     public async Task<Note?> GetById(string id)
     {
-        var stringNote = await _database.StringGetAsync(id);
+        var stringNote = await _database.StringGetAsync(AppendColon(id));
 
         if(!string.IsNullOrEmpty(stringNote))
         {
@@ -40,13 +40,16 @@ public class NoteRepository :  INoteRepository
     {
         var stringNote = JsonSerializer.Serialize(obj);
 
-        await _database.StringSetAsync(obj.Id, stringNote);
+        await _database.StringSetAsync(AppendColon(obj.Id), stringNote);
     }
 
     public async Task Remove(Note obj)
     {
         await _database.StringGetDeleteAsync(obj.Id);
     }
-    
-    
+
+    private string AppendColon(string id)
+    {
+        return ":" + id;
+    }
 }
