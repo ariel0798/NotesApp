@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using MediatR;
 using AutoMapper;
-using NotesApp.ApplicationCore.Dtos.User;
 using NotesApp.ApplicationCore.Helper.Interfaces;
 using Microsoft.AspNetCore.Http;
+using NotesApp.ApplicationCore.Contracts.User.Requests;
 using NotesApp.ApplicationCore.Models;
 using NotesApp.ApplicationCore.Notes.Commands;
 using NotesApp.ApplicationCore.Users.Commands;
@@ -31,7 +31,7 @@ public class AuthService : IAuthService
     }
 
     public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name); 
-    public async Task<string> RegisterUser(RegisterUserDto userDto)
+    public async Task<string> RegisterUser(RegisterUserRequest userDto)
     {
         _passwordHashHelper.CreatePasswordHash(userDto.Password, out string passwordHash, out string passwordSalt);
 
@@ -51,7 +51,7 @@ public class AuthService : IAuthService
         return user.Id;
     }
 
-    public async Task<JwtToken?> LoginUser(LoginUserDto userDto)
+    public async Task<JwtToken?> LoginUser(LoginRequest userDto)
     {
         var query = new GetUserByEmailQuery() 
             { Email = userDto.Email };

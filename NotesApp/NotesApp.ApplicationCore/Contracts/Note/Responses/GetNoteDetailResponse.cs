@@ -1,6 +1,6 @@
-namespace NotesApp.ApplicationCore.Dtos.Note;
+namespace NotesApp.ApplicationCore.Contracts.Note.Responses;
 
-public class GetNoteDetailDto
+public class GetNoteDetailResponse
 {
     public string NoteDetailId { get; set; } 
     public string Title { get; set; }

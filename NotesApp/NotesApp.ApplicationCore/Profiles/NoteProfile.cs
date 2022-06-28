@@ -1,5 +1,6 @@
 using AutoMapper;
-using NotesApp.ApplicationCore.Dtos.Note;
+using NotesApp.ApplicationCore.Contracts.Note.Requests;
+using NotesApp.ApplicationCore.Contracts.Note.Responses;
 using NotesApp.ApplicationCore.Notes.Commands;
 using NotesApp.Domain.Models;
 
@@ -9,9 +10,9 @@ public class NoteProfile : Profile
 {
     public NoteProfile()
     {
-        CreateMap<CreateNoteDto, CreateNoteDetailCommand>();
+        CreateMap<CreateNoteRequest, CreateNoteDetailCommand>();
         CreateMap<CreateNoteDetailCommand, NoteDetail>();
-        CreateMap<NoteDetail, GetNoteDetailDto>(MemberList.Destination);
-        CreateMap<UpdateNoteDetailDto, UpdateNoteDetailCommand>();
+        CreateMap<NoteDetail, GetNoteDetailResponse>(MemberList.Destination);
+        CreateMap<UpdateNoteDetailRequest, UpdateNoteDetailCommand>();
     }
 }

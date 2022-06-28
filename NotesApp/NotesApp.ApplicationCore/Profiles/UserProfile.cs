@@ -1,5 +1,5 @@
 using AutoMapper;
-using NotesApp.ApplicationCore.Dtos.User;
+using NotesApp.ApplicationCore.Contracts.User.Requests;
 using NotesApp.ApplicationCore.Models;
 using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.Domain.Models;
@@ -11,7 +11,7 @@ public class UserProfile : Profile
     public UserProfile()
     {
         CreateMap<CreateUserCommand, User>();
-        CreateMap<RegisterUserDto, CreateUserCommand>();
+        CreateMap<RegisterUserRequest, CreateUserCommand>();
         CreateMap<JwtToken, SetUserTokenCommand>()
             .ForMember(dest => dest.RefreshToken,
                 opt =>

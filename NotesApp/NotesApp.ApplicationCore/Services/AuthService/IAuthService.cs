@@ -1,12 +1,12 @@
-using NotesApp.ApplicationCore.Dtos.User;
+using NotesApp.ApplicationCore.Contracts.User.Requests;
 using NotesApp.ApplicationCore.Models;
 
 namespace NotesApp.ApplicationCore.Services.AuthService;
 
 public interface IAuthService
 {
-    Task<string> RegisterUser(RegisterUserDto userDto);
-    Task<JwtToken?> LoginUser(LoginUserDto userDto);
+    Task<string> RegisterUser(RegisterUserRequest userDto);
+    Task<JwtToken?> LoginUser(LoginRequest userDto);
     Task<JwtToken?> RefreshToken(string refreshToken);
     string GetUserEmail();
 }

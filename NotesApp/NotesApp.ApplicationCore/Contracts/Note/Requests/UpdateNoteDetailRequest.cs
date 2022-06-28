@@ -1,8 +1,6 @@
-using System.Security.AccessControl;
+namespace NotesApp.ApplicationCore.Contracts.Note.Requests;
 
-namespace NotesApp.ApplicationCore.Dtos.Note;
-
-public class UpdateNoteDetailDto
+public class UpdateNoteDetailRequest
 {
     public string NoteDetailId { get; set; }
     public string Title { get; set; }
