@@ -15,9 +15,14 @@ public class GetUserByRefreshTokenQueryHandler : IRequestHandler<GetUserByRefres
     }
     public async Task<User> Handle(GetUserByRefreshTokenQuery request, CancellationToken cancellationToken)
     {
-        //TODO Not reading RefreshToken property fix 
-        var user = await _userRepository.FindFirstByCondition(u => u.RefreshToken == request.RefreshToken);
+        var users = await _userRepository.GetAll();
 
-        return new User();
+        foreach (var user in users)
+        {
+            if (user.RefreshToken.Equals(request.RefreshToken))
+                return user;
+        }
+        
+        return null;
     }
 }
