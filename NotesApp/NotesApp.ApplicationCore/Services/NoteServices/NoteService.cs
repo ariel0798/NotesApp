@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
-using NotesApp.ApplicationCore.Dtos.Note;
+using NotesApp.ApplicationCore.Contracts.Note.Requests;
+using NotesApp.ApplicationCore.Contracts.Note.Responses;
 using NotesApp.ApplicationCore.Notes.Commands;
 using NotesApp.ApplicationCore.Notes.Queries;
 using NotesApp.ApplicationCore.Services.AuthService;
@@ -22,7 +23,7 @@ public class NoteService : INoteService
     }
     
     
-    public async Task<GetNoteDetailDto> CreateNoteDetail(CreateNoteDto noteDto)
+    public async Task<GetNoteDetailResponse> CreateNoteDetail(CreateNoteRequest noteDto)
     {
         var noteId = await GetNoteId();
 
@@ -34,12 +35,12 @@ public class NoteService : INoteService
 
         var noteDetail = await _mediator.Send(command);
 
-        var noteDetailDto = _mapper.Map<GetNoteDetailDto>(noteDetail);
+        var noteDetailDto = _mapper.Map<GetNoteDetailResponse>(noteDetail);
         
         return noteDetailDto;
     }
 
-    public async Task<List<GetNoteDetailDto>> GetAllNoteDetails()
+    public async Task<List<GetNoteDetailResponse>> GetAllNoteDetails()
     {
         var noteId = await GetNoteId();
         
@@ -51,11 +52,11 @@ public class NoteService : INoteService
         var note = await _mediator.Send(query);
 
         var noteDetailNonDeleted = note.NoteDetails.Where(n => n.IsDeleted == false);
-        var noteDetailsDto = _mapper.Map<List<GetNoteDetailDto>>(noteDetailNonDeleted);
+        var noteDetailsDto = _mapper.Map<List<GetNoteDetailResponse>>(noteDetailNonDeleted);
         return noteDetailsDto;
     }
     
-    public async Task<List<GetNoteDetailDto>> GetAllNoteDetailsTrash()
+    public async Task<List<GetNoteDetailResponse>> GetAllNoteDetailsTrash()
     {
         var noteId = await GetNoteId();
         
@@ -67,10 +68,10 @@ public class NoteService : INoteService
         var note = await _mediator.Send(query);
 
         var noteDetailNonDeleted = note.NoteDetails.Where(n => n.IsDeleted == true);
-        var noteDetailsDto = _mapper.Map<List<GetNoteDetailDto>>(noteDetailNonDeleted);
+        var noteDetailsDto = _mapper.Map<List<GetNoteDetailResponse>>(noteDetailNonDeleted);
         return noteDetailsDto;
     }
-    public async Task<GetNoteDetailDto?> GetNoteDetailById(string noteDetailId)
+    public async Task<GetNoteDetailResponse?> GetNoteDetailById(string noteDetailId)
     {
         var noteId = await GetNoteId();
         
@@ -85,12 +86,12 @@ public class NoteService : INoteService
 
         var noteDetail = await _mediator.Send(query);
         
-        var noteDetailDto = _mapper.Map<GetNoteDetailDto>(noteDetail);
+        var noteDetailDto = _mapper.Map<GetNoteDetailResponse>(noteDetail);
         
         return noteDetailDto;
     }
 
-    public async Task<GetNoteDetailDto> UpdateNoteDetail(UpdateNoteDetailDto noteDetailDto)
+    public async Task<GetNoteDetailResponse> UpdateNoteDetail(UpdateNoteDetailRequest noteDetailDto)
     {
         var noteId = await GetNoteId();
         
@@ -103,7 +104,7 @@ public class NoteService : INoteService
         
         var noteDetail = await _mediator.Send(command);
         
-        var noteDetailGetDto = _mapper.Map<GetNoteDetailDto>(noteDetail);
+        var noteDetailGetDto = _mapper.Map<GetNoteDetailResponse>(noteDetail);
         
         return noteDetailGetDto;
     }

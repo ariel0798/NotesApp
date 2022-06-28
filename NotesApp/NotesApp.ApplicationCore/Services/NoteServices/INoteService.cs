@@ -1,15 +1,15 @@
-using NotesApp.ApplicationCore.Dtos.Note;
-using NotesApp.Domain.Models;
+using NotesApp.ApplicationCore.Contracts.Note.Requests;
+using NotesApp.ApplicationCore.Contracts.Note.Responses;
 
 namespace NotesApp.ApplicationCore.Services.NoteServices;
 
 public interface INoteService
 {
-    Task<GetNoteDetailDto> CreateNoteDetail(CreateNoteDto noteDto);
-    Task<GetNoteDetailDto?> GetNoteDetailById(string noteDetailId);
-    Task<List<GetNoteDetailDto>> GetAllNoteDetails();
-    Task<List<GetNoteDetailDto>> GetAllNoteDetailsTrash();
-    Task<GetNoteDetailDto> UpdateNoteDetail(UpdateNoteDetailDto noteDetailDto);
+    Task<GetNoteDetailResponse> CreateNoteDetail(CreateNoteRequest noteDto);
+    Task<GetNoteDetailResponse?> GetNoteDetailById(string noteDetailId);
+    Task<List<GetNoteDetailResponse>> GetAllNoteDetails();
+    Task<List<GetNoteDetailResponse>> GetAllNoteDetailsTrash();
+    Task<GetNoteDetailResponse> UpdateNoteDetail(UpdateNoteDetailRequest noteDetailDto);
     Task<bool> RecoverNoteDetail(string noteDetailId);
     Task<bool> SoftDeleteNoteDetail(string noteDetailId);
     Task<bool> DeleteNoteDetail(string noteDetailId);

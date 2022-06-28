@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NotesApp.ApplicationCore.Dtos.Note;
+using NotesApp.ApplicationCore.Contracts.Note.Requests;
 using NotesApp.ApplicationCore.Services.NoteServices;
 
 namespace NotesApp.Api.Controllers;
@@ -18,7 +18,7 @@ public class NoteController : Controller
     
     [HttpPost]
     
-    public async Task<IActionResult> CreateNoteDetail(CreateNoteDto noteDto)
+    public async Task<IActionResult> CreateNoteDetail(CreateNoteRequest noteDto)
     {
         var result = await _noteService.CreateNoteDetail(noteDto);
         return Ok(result);
@@ -46,7 +46,7 @@ public class NoteController : Controller
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateNoteDetail(UpdateNoteDetailDto noteDetailDto)
+    public async Task<IActionResult> UpdateNoteDetail(UpdateNoteDetailRequest noteDetailDto)
     {
         var result = await _noteService.UpdateNoteDetail(noteDetailDto);
         return Ok(result);

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using NotesApp.ApplicationCore.Dtos.User;
+using NotesApp.ApplicationCore.Contracts.User.Requests;
 using NotesApp.ApplicationCore.Models;
 using NotesApp.ApplicationCore.Services.AuthService;
 
@@ -17,14 +17,14 @@ public class AuthController : Controller
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterUserDto userDto)
+    public async Task<IActionResult> Register(RegisterUserRequest userDto)
     {
         var result = await _authService.RegisterUser(userDto);
         return Ok(result);
     }
     
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginUserDto userDto)
+    public async Task<IActionResult> Login(LoginRequest userDto)
     {
         var result = await _authService.LoginUser(userDto);
 
