@@ -1,6 +1,6 @@
 using NotesApp.ApplicationCore.Models;
 
-namespace NotesApp.ApplicationCore.Helper.Interfaces;
+namespace NotesApp.ApplicationCore.Helpers.Interfaces;
 
 public interface IJwtHelper
 {

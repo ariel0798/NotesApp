@@ -1,4 +1,4 @@
-namespace NotesApp.ApplicationCore.Helper.Interfaces;
+namespace NotesApp.ApplicationCore.Helpers.Interfaces;
 
 public interface IPasswordHashHelper
 {

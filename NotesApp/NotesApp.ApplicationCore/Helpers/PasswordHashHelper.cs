@@ -1,8 +1,8 @@
 using System.Security.Cryptography;
 using System.Text.Json;
-using NotesApp.ApplicationCore.Helper.Interfaces;
+using NotesApp.ApplicationCore.Helpers.Interfaces;
 
-namespace NotesApp.ApplicationCore.Helper;
+namespace NotesApp.ApplicationCore.Helpers;
 
 public class PasswordHashHelper : IPasswordHashHelper
 {
