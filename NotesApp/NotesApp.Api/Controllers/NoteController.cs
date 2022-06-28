@@ -51,6 +51,13 @@ public class NoteController : Controller
         var result = await _noteService.UpdateNoteDetail(noteDetailDto);
         return Ok(result);
     }
+
+    [HttpPut("recover")]
+    public async Task<IActionResult> RecoverNoteDetail(string noteDetailId)
+    {
+        var result = await _noteService.RecoverNoteDetail(noteDetailId);
+        return Ok(result);
+    }
     
     [HttpDelete("{noteDetailId}/soft-delete")]
     public async Task<IActionResult> SoftDeleteNoteDetail(string noteDetailId)

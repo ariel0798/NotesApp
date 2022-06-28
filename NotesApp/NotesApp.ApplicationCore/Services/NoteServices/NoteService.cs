@@ -108,6 +108,24 @@ public class NoteService : INoteService
         return noteDetailGetDto;
     }
 
+    public async Task<bool> RecoverNoteDetail(string noteDetailId)
+    {
+        var noteId = await GetNoteId();
+        
+        if (noteId == null)
+            return false;
+
+        var command = new RecoverNoteDetailCommand()
+        {
+            NoteDetailId = noteDetailId,
+            NoteId = noteId
+        };
+
+        var noteDetail = await _mediator.Send(command);
+
+        return noteDetail.IsDeleted;
+    }
+    
     public async Task<bool> SoftDeleteNoteDetail(string noteDetailId)
     {
         var noteId = await GetNoteId();
