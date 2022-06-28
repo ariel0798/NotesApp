@@ -3,10 +3,10 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using NotesApp.ApplicationCore.Helper.Interfaces;
+using NotesApp.ApplicationCore.Helpers.Interfaces;
 using NotesApp.ApplicationCore.Models;
 
-namespace NotesApp.ApplicationCore.Helper;
+namespace NotesApp.ApplicationCore.Helpers;
 
 public class JwtHelper : IJwtHelper
 {
