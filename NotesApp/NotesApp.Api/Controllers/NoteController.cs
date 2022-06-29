@@ -18,9 +18,9 @@ public class NoteController : Controller
     
     [HttpPost]
     
-    public async Task<IActionResult> CreateNoteDetail(CreateNoteRequest noteDto)
+    public async Task<IActionResult> CreateNoteDetail(CreateNoteRequest createNoteRequest)
     {
-        var result = await _noteService.CreateNoteDetail(noteDto);
+        var result = await _noteService.CreateNoteDetail(createNoteRequest);
         return Ok(result);
     }
 
@@ -46,9 +46,9 @@ public class NoteController : Controller
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateNoteDetail(UpdateNoteDetailRequest noteDetailDto)
+    public async Task<IActionResult> UpdateNoteDetail(UpdateNoteDetailRequest updateNoteDetailRequest)
     {
-        var result = await _noteService.UpdateNoteDetail(noteDetailDto);
+        var result = await _noteService.UpdateNoteDetail(updateNoteDetailRequest);
         return Ok(result);
     }
 
