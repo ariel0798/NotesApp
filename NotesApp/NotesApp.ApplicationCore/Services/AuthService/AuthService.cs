@@ -9,6 +9,7 @@ using NotesApp.ApplicationCore.Notes.Commands;
 using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.ApplicationCore.Users.Queries;
 using NotesApp.Domain.Models;
+using FluentValidation.Results;
 
 namespace NotesApp.ApplicationCore.Services.AuthService;
 
@@ -31,11 +32,12 @@ public class AuthService : IAuthService
     }
 
     public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name); 
-    public async Task<string> RegisterUser(RegisterUserRequest userDto)
+    public async Task<string> RegisterUser(RegisterUserRequest registerUserRequest)
     {
-        _passwordHashHelper.CreatePasswordHash(userDto.Password, out string passwordHash, out string passwordSalt);
+        
+        _passwordHashHelper.CreatePasswordHash(registerUserRequest.Password, out string passwordHash, out string passwordSalt);
 
-        var createUserCommand = _mapper.Map<CreateUserCommand>(userDto);
+        var createUserCommand = _mapper.Map<CreateUserCommand>(registerUserRequest);
         
         createUserCommand.PasswordHash = passwordHash;
         createUserCommand.PasswordSalt = passwordSalt;
@@ -51,16 +53,16 @@ public class AuthService : IAuthService
         return user.Id;
     }
 
-    public async Task<JwtToken?> LoginUser(LoginRequest userDto)
+    public async Task<JwtToken?> LoginUser(LoginRequest loginRequest)
     {
         var query = new GetUserByEmailQuery() 
-            { Email = userDto.Email };
+            { Email = loginRequest.Email };
         var user = await  _mediator.Send(query);
 
         if (user == null)
             return null;
 
-        if (!_passwordHashHelper.VerifyPasswordHash(userDto.Password, user.PasswordHash, user.PasswordSalt))
+        if (!_passwordHashHelper.VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt))
             return null;
 
         var fullToken = await SetTokenAndRefreshToken(user);
