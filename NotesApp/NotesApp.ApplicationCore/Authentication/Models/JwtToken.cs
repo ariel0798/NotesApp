@@ -1,4 +1,4 @@
-namespace NotesApp.ApplicationCore.Models;
+namespace NotesApp.ApplicationCore.Authentication.Models;
 
 public class JwtToken
 {
