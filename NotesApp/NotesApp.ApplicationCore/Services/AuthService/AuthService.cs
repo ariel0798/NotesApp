@@ -4,12 +4,14 @@ using AutoMapper;
 using NotesApp.ApplicationCore.Helpers.Interfaces;
 using Microsoft.AspNetCore.Http;
 using NotesApp.ApplicationCore.Contracts.User.Requests;
-using NotesApp.ApplicationCore.Models;
 using NotesApp.ApplicationCore.Notes.Commands;
 using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.ApplicationCore.Users.Queries;
 using NotesApp.Domain.Models;
 using FluentValidation.Results;
+using NotesApp.ApplicationCore.Authentication;
+using NotesApp.ApplicationCore.Authentication.Interfaces;
+using NotesApp.ApplicationCore.Authentication.Models;
 
 namespace NotesApp.ApplicationCore.Services.AuthService;
 
@@ -17,25 +19,25 @@ public class AuthService : IAuthService
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
-    private readonly IPasswordHashHelper _passwordHashHelper;
-    private readonly IJwtHelper _jwtHelper;
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AuthService(IMediator mediator, IMapper mapper, IPasswordHashHelper passwordHashHelper, IJwtHelper jwtHelper,
-        IHttpContextAccessor contextAccessor)
+    public AuthService(IMediator mediator, IMapper mapper,
+        IHttpContextAccessor contextAccessor, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
     {
         _mediator = mediator;
         _mapper = mapper;
-        _passwordHashHelper = passwordHashHelper;
-        _jwtHelper = jwtHelper;
         _httpContextAccessor = contextAccessor;
+        _passwordHasher = passwordHasher;
+        _jwtTokenGenerator = jwtTokenGenerator;
     }
 
     public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name); 
     public async Task<string> RegisterUser(RegisterUserRequest registerUserRequest)
     {
         
-        _passwordHashHelper.CreatePasswordHash(registerUserRequest.Password, out string passwordHash, out string passwordSalt);
+        _passwordHasher.CreatePasswordHash(registerUserRequest.Password, out string passwordHash, out string passwordSalt);
 
         var createUserCommand = _mapper.Map<CreateUserCommand>(registerUserRequest);
         
@@ -62,7 +64,7 @@ public class AuthService : IAuthService
         if (user == null)
             return null;
 
-        if (!_passwordHashHelper.VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt))
+        if (!_passwordHasher.VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt))
             return null;
 
         var fullToken = await SetTokenAndRefreshToken(user);
@@ -92,9 +94,9 @@ public class AuthService : IAuthService
 
     private async Task<JwtToken> SetTokenAndRefreshToken(User user)
     {
-        var token = _jwtHelper.CreateToken(user.Email);
+        var token = _jwtTokenGenerator.CreateToken(user.Email);
 
-        var fullToken = _jwtHelper.GenerateRefreshToken();
+        var fullToken = _jwtTokenGenerator.GenerateRefreshToken();
         fullToken.Token = token;
 
         var setTokenCommand = _mapper.Map<SetUserTokenCommand>(fullToken);
