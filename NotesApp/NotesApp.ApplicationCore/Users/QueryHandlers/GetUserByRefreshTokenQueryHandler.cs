@@ -19,8 +19,12 @@ public class GetUserByRefreshTokenQueryHandler : IRequestHandler<GetUserByRefres
 
         foreach (var user in users)
         {
-            if (user.RefreshToken.Equals(request.RefreshToken))
-                return user;
+            if (user.RefreshToken != null)
+            {
+                if (user.RefreshToken.Equals(request.RefreshToken))
+                    return user;
+            }
+            
         }
         
         return null;
