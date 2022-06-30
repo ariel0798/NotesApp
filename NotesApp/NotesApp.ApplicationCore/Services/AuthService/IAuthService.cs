@@ -1,5 +1,5 @@
+using NotesApp.ApplicationCore.Authentication.Models;
 using NotesApp.ApplicationCore.Contracts.User.Requests;
-using NotesApp.ApplicationCore.Models;
 
 namespace NotesApp.ApplicationCore.Services.AuthService;
 
