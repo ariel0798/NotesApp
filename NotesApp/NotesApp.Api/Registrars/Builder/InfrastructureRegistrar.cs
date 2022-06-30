@@ -4,7 +4,7 @@ using NotesApp.Infrastructure.Data;
 
 namespace NotesApp.Api.Registrars.Builder;
 
-public class RepositoriesRegistrar : IWebApplicationBuilderRegistrar
+public class InfrastructureRegistrar : IWebApplicationBuilderRegistrar
 {
     public void RegisterServices(WebApplicationBuilder builder)
     {
