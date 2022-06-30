@@ -15,7 +15,7 @@ public class AuthenticationRegistrar : IWebApplicationBuilderRegistrar
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                        .GetBytes(builder.Configuration.GetSection("AppSetting:Token").Value)),
+                        .GetBytes(builder.Configuration.GetSection("JwtSettings:Secret").Value)),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
