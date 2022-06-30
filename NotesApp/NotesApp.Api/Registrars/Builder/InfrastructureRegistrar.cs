@@ -1,6 +1,7 @@
 using NotesApp.Domain;
 using NotesApp.Domain.Interfaces;
 using NotesApp.Infrastructure.Data;
+using NotesApp.Infrastructure.Data.Authentication;
 
 namespace NotesApp.Api.Registrars.Builder;
 
@@ -17,5 +18,7 @@ public class InfrastructureRegistrar : IWebApplicationBuilderRegistrar
             .AsSelf()
             .WithSingletonLifetime()
         );
+
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
     }
 }
