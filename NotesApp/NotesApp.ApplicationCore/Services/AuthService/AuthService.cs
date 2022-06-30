@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using MediatR;
 using AutoMapper;
-using NotesApp.ApplicationCore.Helpers.Interfaces;
 using Microsoft.AspNetCore.Http;
 using NotesApp.ApplicationCore.Contracts.User.Requests;
 using NotesApp.ApplicationCore.Notes.Commands;
