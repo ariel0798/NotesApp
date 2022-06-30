@@ -1,6 +1,6 @@
 using AutoMapper;
+using NotesApp.ApplicationCore.Authentication.Models;
 using NotesApp.ApplicationCore.Contracts.User.Requests;
-using NotesApp.ApplicationCore.Models;
 using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.Domain.Models;
 
