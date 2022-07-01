@@ -1,13 +1,14 @@
 using System.Security.Claims;
 using MediatR;
 using AutoMapper;
+using FluentValidation;
+using LanguageExt.Common;
 using Microsoft.AspNetCore.Http;
 using NotesApp.ApplicationCore.Contracts.User.Requests;
 using NotesApp.ApplicationCore.Notes.Commands;
 using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.ApplicationCore.Users.Queries;
 using NotesApp.Domain.Models;
-using FluentValidation.Results;
 using NotesApp.ApplicationCore.Authentication;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
 using NotesApp.ApplicationCore.Authentication.Models;
@@ -21,21 +22,28 @@ public class AuthService : IAuthService
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IValidator<RegisterUserRequest> _validatorRegister;
 
     public AuthService(IMediator mediator, IMapper mapper,
-        IHttpContextAccessor contextAccessor, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
+        IHttpContextAccessor contextAccessor, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IValidator<RegisterUserRequest> validatorRegister)
     {
         _mediator = mediator;
         _mapper = mapper;
         _httpContextAccessor = contextAccessor;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _validatorRegister = validatorRegister;
     }
 
     public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name); 
-    public async Task<string> RegisterUser(RegisterUserRequest registerUserRequest)
+    public async Task<Result<bool>> RegisterUser(RegisterUserRequest registerUserRequest)
     {
-        
+        var validationResult = await _validatorRegister.ValidateAsync(registerUserRequest);
+        if (!validationResult.IsValid)
+        {
+            var validationException = new ValidationException(validationResult.Errors);
+            return new Result<bool>(validationException);
+        }
         _passwordHasher.CreatePasswordHash(registerUserRequest.Password, out string passwordHash, out string passwordSalt);
 
         var createUserCommand = _mapper.Map<CreateUserCommand>(registerUserRequest);
@@ -49,9 +57,9 @@ public class AuthService : IAuthService
 
         var user = await _mediator.Send(createUserCommand);
         
-        CreateNote(user);
+        await CreateNote(user);
         
-        return user.Id;
+        return user.Id != null;
     }
 
     public async Task<JwtToken?> LoginUser(LoginRequest loginRequest)
