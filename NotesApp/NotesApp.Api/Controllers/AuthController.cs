@@ -1,4 +1,6 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Authentication.Models;
 using NotesApp.ApplicationCore.Contracts.User.Requests;
 using NotesApp.ApplicationCore.Services.AuthService;
@@ -20,7 +22,9 @@ public class AuthController : Controller
     public async Task<IActionResult> Register(RegisterUserRequest registerUserRequest)
     {
         var result = await _authService.RegisterUser(registerUserRequest);
-        return Ok(result);
+
+        return result.ToOk();
+
     }
     
     [HttpPost("login")]
