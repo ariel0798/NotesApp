@@ -9,16 +9,14 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="11.0.1" />
       <PackageReference Include="FluentValidation" Version="11.1.0" />
+      <PackageReference Include="LanguageExt.Core" Version="4.2.9" />
       <PackageReference Include="MediatR" Version="10.0.1" />
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.19.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.19.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\NotesApp.Domain\NotesApp.Domain.csproj" />
-      <ProjectReference Include="..\NotesApp.Infrastructure.Data\NotesApp.Infrastructure.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -28,7 +26,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Validation" />
+      <Folder Include="Models" />
+      <Folder Include="Validation\Requests\Notes" />
     </ItemGroup>
 
 </Project>
