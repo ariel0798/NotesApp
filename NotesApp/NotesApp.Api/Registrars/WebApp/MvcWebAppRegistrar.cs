@@ -1,3 +1,5 @@
+using NotesApp.Api.Middlewares;
+
 namespace NotesApp.Api.Registrars.WebApp;
 
 public class MvcWebAppRegistrar :  IWebApplicationRegistrar
@@ -10,6 +12,7 @@ public class MvcWebAppRegistrar :  IWebApplicationRegistrar
             app.UseSwaggerUI();
         }
 
+        app.UseMiddleware<ErrorHandlingMiddleware>();
         app.UseHttpsRedirection();
 
         app.UseAuthentication();
