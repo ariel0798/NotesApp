@@ -16,6 +16,13 @@ public class GetUserByEmailQueryHandler : IRequestHandler<GetUserByEmailQuery,Us
     
     public async Task<User> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
     {
-        return await _userRepository.FindFirstByCondition(u => u.Email == request.Email);
+        var users = await _userRepository.GetAll();
+
+        foreach (var user in users)
+        {
+            if (user.Email.Equals(request.Email))
+                    return user;
+        }
+        return null;
     }
 }
