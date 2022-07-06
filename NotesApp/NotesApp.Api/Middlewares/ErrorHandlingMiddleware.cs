@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
@@ -31,13 +32,19 @@ public class ErrorHandlingMiddleware
 
     private static Task HandleExceptionMessageAsync(HttpContext context)
     {
-        string response = JsonSerializer.Serialize(new ValidationProblemDetails()
+        var problemDetails = new ProblemDetails()
         {
+            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1",
             Title = "An error  while processing your request.",
             Status = (int)HttpStatusCode.InternalServerError,
-            Instance = context.Request.Path,
-         
-        });
+        };
+        
+        var traceId = Activity.Current?.Id ?? context?.TraceIdentifier;
+        if (traceId != null)
+            problemDetails.Extensions["traceId"] = traceId;
+        
+        string response = JsonSerializer.Serialize(problemDetails);
+        
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
