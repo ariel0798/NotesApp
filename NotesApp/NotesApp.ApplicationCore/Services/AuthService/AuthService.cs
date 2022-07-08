@@ -13,6 +13,7 @@ using NotesApp.Domain.Models;
 using NotesApp.ApplicationCore.Authentication;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
 using NotesApp.ApplicationCore.Authentication.Models;
+using NotesApp.Domain.Errors.Exceptions;
 using NotesApp.Domain.Errors.Messages;
 
 namespace NotesApp.ApplicationCore.Services.AuthService;
@@ -46,6 +47,13 @@ public class AuthService : IAuthService
             var validationException = new ValidationException(validationResult.Errors);
             return new Result<bool>(validationException);
         }
+
+        var userQuery = new GetUserByEmailQuery { Email = registerUserRequest.Email };
+        var emailUser = _mediator.Send(userQuery);
+        
+        if (emailUser != null)
+            return new Result<bool>(new EmailDuplicatedException(ErrorMessages.User.DuplicatedEmail));
+        
         _passwordHasher.CreatePasswordHash(registerUserRequest.Password, out string passwordHash, out string passwordSalt);
 
         var createUserCommand = _mapper.Map<CreateUserCommand>(registerUserRequest);
