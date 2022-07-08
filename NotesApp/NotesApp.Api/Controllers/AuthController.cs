@@ -36,7 +36,8 @@ public class AuthController : Controller
            SetRefreshToken(token);
         }
         
-        return result.ToOk();
+        var resultToken = result.Map<string>(obj => obj.Token);
+        return resultToken.ToOk();
     }
 
     [HttpPost("refresh-token")]
@@ -51,8 +52,9 @@ public class AuthController : Controller
             var token = result.Match<JwtToken>(obj => obj, null);
             SetRefreshToken(token);
         }
-        
-        return result.ToOk();
+
+        var resultToken = result.Map<string>(obj => obj.Token);
+        return resultToken.ToOk();
     }
 
     private void SetRefreshToken(JwtToken refreshToken)
