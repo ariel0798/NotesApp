@@ -8,6 +8,6 @@ public interface IAuthService
 {
     Task<Result<bool>>RegisterUser(RegisterUserRequest registerUserRequest);
     Task<Result<JwtToken>> LoginUser(LoginRequest loginRequest);
-    Task<JwtToken?> RefreshToken(string refreshToken);
+    Task<Result<JwtToken>> RefreshToken(string refreshToken);
     string GetUserEmail();
 }

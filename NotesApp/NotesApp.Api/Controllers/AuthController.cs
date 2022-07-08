@@ -46,12 +46,13 @@ public class AuthController : Controller
 
         var result = await _authService.RefreshToken(refreshToken);
         
-        if (result == null)
-            return Unauthorized();
+        if(result.IsSuccess)
+        {
+            var token = result.Match<JwtToken>(obj => obj, null);
+            SetRefreshToken(token);
+        }
         
-        SetRefreshToken(result);
-
-        return Ok(result.Token);
+        return result.ToOk();
     }
 
     private void SetRefreshToken(JwtToken refreshToken)
