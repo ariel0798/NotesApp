@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Contracts.Note.Requests;
 using NotesApp.ApplicationCore.Services.NoteServices;
 
@@ -21,7 +22,7 @@ public class NoteController : Controller
     public async Task<IActionResult> CreateNoteDetail(CreateNoteRequest createNoteRequest)
     {
         var result = await _noteService.CreateNoteDetail(createNoteRequest);
-        return Ok(result);
+        return result.ToOk();
     }
 
     [HttpGet]

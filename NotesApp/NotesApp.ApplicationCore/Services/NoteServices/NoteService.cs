@@ -1,11 +1,15 @@
 using AutoMapper;
+using FluentValidation;
+using LanguageExt.Common;
 using MediatR;
 using NotesApp.ApplicationCore.Contracts.Note.Requests;
 using NotesApp.ApplicationCore.Contracts.Note.Responses;
+using NotesApp.ApplicationCore.Extensions;
 using NotesApp.ApplicationCore.Notes.Commands;
 using NotesApp.ApplicationCore.Notes.Queries;
 using NotesApp.ApplicationCore.Services.AuthService;
 using NotesApp.ApplicationCore.Users.Queries;
+using NotesApp.Domain.Errors.Exceptions;
 
 namespace NotesApp.ApplicationCore.Services.NoteServices;
 
@@ -14,23 +18,30 @@ public class NoteService : INoteService
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly IAuthService _authService;
+    private readonly IValidator<CreateNoteRequest> _validatorCreateNote;
+        
 
-    public NoteService(IMediator mediator, IMapper mapper, IAuthService authService)
+    public NoteService(IMediator mediator, IMapper mapper, IAuthService authService, IValidator<CreateNoteRequest> validatorCreateNote)
     {
         _mediator = mediator;
         _mapper = mapper;
         _authService = authService;
+        _validatorCreateNote = validatorCreateNote;
     }
     
     
-    public async Task<GetNoteDetailResponse> CreateNoteDetail(CreateNoteRequest noteDto)
+    public async Task<Result<GetNoteDetailResponse>> CreateNoteDetail(CreateNoteRequest createNoteRequest)
     {
+        var validationResult = await _validatorCreateNote.ValidateAsync(createNoteRequest);
+        if (!validationResult.IsValid)
+            return new Result<GetNoteDetailResponse>().CreateValidationException(validationResult.Errors);
+        
         var noteId = await GetNoteId();
 
         if (noteId == null)
-            return null;
+            return new Result<GetNoteDetailResponse>().CreateException<GetNoteDetailResponse, NoteNotFoundException>();
         
-        var command = _mapper.Map <CreateNoteDetailCommand>(noteDto);
+        var command = _mapper.Map <CreateNoteDetailCommand>(createNoteRequest);
         command.NoteId = noteId;
 
         var noteDetail = await _mediator.Send(command);

@@ -1,3 +1,4 @@
+using LanguageExt.Common;
 using NotesApp.ApplicationCore.Contracts.Note.Requests;
 using NotesApp.ApplicationCore.Contracts.Note.Responses;
 
@@ -5,7 +6,7 @@ namespace NotesApp.ApplicationCore.Services.NoteServices;
 
 public interface INoteService
 {
-    Task<GetNoteDetailResponse> CreateNoteDetail(CreateNoteRequest createNoteRequest);
+    Task<Result<GetNoteDetailResponse>> CreateNoteDetail(CreateNoteRequest createNoteRequest);
     Task<GetNoteDetailResponse?> GetNoteDetailById(string noteDetailId);
     Task<List<GetNoteDetailResponse>> GetAllNoteDetails();
     Task<List<GetNoteDetailResponse>> GetAllNoteDetailsTrash();
