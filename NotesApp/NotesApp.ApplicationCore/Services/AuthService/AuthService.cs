@@ -91,7 +91,7 @@ public class AuthService : IAuthService
         return fullToken;
     }
 
-    public async Task<JwtToken?> RefreshToken(string refreshToken)
+    public async Task<Result<JwtToken>> RefreshToken(string refreshToken)
     {
         var query = new GetUserByRefreshTokenQuery()
         {
@@ -101,10 +101,12 @@ public class AuthService : IAuthService
         var user = await  _mediator.Send(query);
         
         if (user == null)
-            return null;
+            return new Result<JwtToken>(
+                new InvalidCredentialException(ErrorMessages.Authentication.InvalidCredentials));
 
         if (user.TokenExpires < DateTime.Now)
-            return null;
+            return new Result<JwtToken>(
+                new InvalidCredentialException(ErrorMessages.Authentication.InvalidCredentials));
         
         var fullToken = await SetTokenAndRefreshToken(user);
         
