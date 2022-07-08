@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using System.Security.Claims;
 using MediatR;
 using AutoMapper;
@@ -12,6 +13,7 @@ using NotesApp.Domain.Models;
 using NotesApp.ApplicationCore.Authentication;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
 using NotesApp.ApplicationCore.Authentication.Models;
+using Errors = NotesApp.Domain.Errors.Messages.Errors;
 
 namespace NotesApp.ApplicationCore.Services.AuthService;
 
@@ -62,17 +64,19 @@ public class AuthService : IAuthService
         return user.Id != null;
     }
 
-    public async Task<JwtToken?> LoginUser(LoginRequest loginRequest)
+    public async Task<Result<JwtToken>> LoginUser(LoginRequest loginRequest)
     {
         var query = new GetUserByEmailQuery() 
             { Email = loginRequest.Email };
         var user = await  _mediator.Send(query);
 
         if (user == null)
-            return null;
+            return new Result<JwtToken>(
+                new InvalidCredentialException(Errors.Messages.Authentication.InvalidCredentials));
 
         if (!_passwordHasher.VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt))
-            return null;
+            return new Result<JwtToken>(
+                new InvalidCredentialException(Errors.Messages.Authentication.InvalidCredentials));
 
         var fullToken = await SetTokenAndRefreshToken(user);
         

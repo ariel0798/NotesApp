@@ -1,4 +1,3 @@
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Authentication.Models;
@@ -24,7 +23,6 @@ public class AuthController : Controller
         var result = await _authService.RegisterUser(registerUserRequest);
 
         return result.ToOk();
-
     }
     
     [HttpPost("login")]
@@ -32,12 +30,13 @@ public class AuthController : Controller
     {
         var result = await _authService.LoginUser(loginRequest);
 
-        if (result == null)
-            return Unauthorized();
+        if (result.IsSuccess)
+        {
+           var token = result.Match<JwtToken>(obj => obj, null);
+           SetRefreshToken(token);
+        }
         
-        SetRefreshToken(result);
-
-        return Ok(result.Token);
+        return result.ToOk();
     }
 
     [HttpPost("refresh-token")]
