@@ -3,6 +3,7 @@ using System.Security.Authentication;
 using FluentValidation;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Mvc;
+using NotesApp.Domain.Errors.Exceptions;
 
 namespace NotesApp.Api.Extensions;
 
@@ -16,17 +17,18 @@ public static class ControllerExtensions
             return new OkObjectResult(obj);
         }, exception =>
         {
-            if (exception is ValidationException validationException)
+            return exception switch
             {
-                return new BadRequestObjectResult(validationException.ToProblemDetails());
-            }
-
-            if (exception is InvalidCredentialException invalidCredentialException)
-            {
-                return new ConflictObjectResult(ProblemDetailsConflict(invalidCredentialException.Message));
-            }
-
-            return new StatusCodeResult(500);
+                ValidationException validationException => new BadRequestObjectResult(validationException.ToProblemDetails()),
+                
+                InvalidCredentialException invalidCredentialException => new ConflictObjectResult(
+                    ProblemDetailsConflict(invalidCredentialException.Message)),
+                
+                EmailDuplicatedException emailDuplicatedException => new ConflictObjectResult(
+                    ProblemDetailsConflict(emailDuplicatedException.Message)),
+                
+                _ => new StatusCodeResult(500)
+            };
         });
     }
 
