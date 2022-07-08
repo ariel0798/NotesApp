@@ -49,7 +49,7 @@ public class AuthService : IAuthService
         }
 
         var userQuery = new GetUserByEmailQuery { Email = registerUserRequest.Email };
-        var emailUser = _mediator.Send(userQuery);
+        var emailUser = await _mediator.Send(userQuery);
         
         if (emailUser != null)
             return new Result<bool>(new EmailDuplicatedException(ErrorMessages.User.DuplicatedEmail));
@@ -60,10 +60,6 @@ public class AuthService : IAuthService
         
         createUserCommand.PasswordHash = passwordHash;
         createUserCommand.PasswordSalt = passwordSalt;
-        
-        createUserCommand.TokenCreated = DateTime.Now;
-        createUserCommand.TokenExpires = DateTime.Now;
-
 
         var user = await _mediator.Send(createUserCommand);
         

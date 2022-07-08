@@ -17,8 +17,8 @@ public class User
     public string PasswordSalt { get; set; } 
     [Searchable(Sortable = true)]
     public string RefreshToken { get;  set; } 
-    public DateTime TokenCreated { get;  set; } 
-    public DateTime TokenExpires { get;  set; }
+    public DateTime? TokenCreated { get;  set; } 
+    public DateTime? TokenExpires { get;  set; }
     public DateTime UserCreated { get; } = DateTime.Now;
     public string? NoteId { get; set; } = string.Empty;
 
