@@ -7,7 +7,7 @@ namespace NotesApp.ApplicationCore.Services.AuthService;
 public interface IAuthService
 {
     Task<Result<bool>>RegisterUser(RegisterUserRequest registerUserRequest);
-    Task<JwtToken?> LoginUser(LoginRequest loginRequest);
+    Task<Result<JwtToken>> LoginUser(LoginRequest loginRequest);
     Task<JwtToken?> RefreshToken(string refreshToken);
     string GetUserEmail();
 }
