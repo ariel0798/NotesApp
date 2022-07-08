@@ -20,8 +20,11 @@ public static class ExceptionExtension
         {
             return new Result<TResult>(new InvalidCredentialException(ErrorMessages.Authentication.InvalidCredentials));
         }
+        if (typeof(TException) == typeof(NoteNotFoundException))
+        {
+            return new Result<TResult>(new NoteNotFoundException(ErrorMessages.Note.NoteNotFound));
+        }
         
-
         return new Result<TResult>();
     }
     
