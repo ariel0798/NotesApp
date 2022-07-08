@@ -13,7 +13,7 @@ using NotesApp.Domain.Models;
 using NotesApp.ApplicationCore.Authentication;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
 using NotesApp.ApplicationCore.Authentication.Models;
-using Errors = NotesApp.Domain.Errors.Messages.Errors;
+using NotesApp.Domain.Errors.Messages;
 
 namespace NotesApp.ApplicationCore.Services.AuthService;
 
@@ -72,11 +72,11 @@ public class AuthService : IAuthService
 
         if (user == null)
             return new Result<JwtToken>(
-                new InvalidCredentialException(Errors.Messages.Authentication.InvalidCredentials));
+                new InvalidCredentialException(ErrorMessages.Authentication.InvalidCredentials));
 
         if (!_passwordHasher.VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt))
             return new Result<JwtToken>(
-                new InvalidCredentialException(Errors.Messages.Authentication.InvalidCredentials));
+                new InvalidCredentialException(ErrorMessages.Authentication.InvalidCredentials));
 
         var fullToken = await SetTokenAndRefreshToken(user);
         

@@ -9,9 +9,9 @@ public class RegisterUserRequestValidation : AbstractValidator<RegisterUserReque
     public RegisterUserRequestValidation()
     {
         RuleFor(c => c.Email)
-            .NotEmpty().WithMessage(Errors.Messages.User.EmptyName)
+            .NotEmpty().WithMessage(ErrorMessages.User.EmptyName)
             .NotNull()
-            .EmailAddress().WithMessage(Errors.Messages.User.InvalidEmailFormat);
+            .EmailAddress().WithMessage(ErrorMessages.User.InvalidEmailFormat);
 
         RuleFor(c => c.Password)
             .NotEmpty()
@@ -19,7 +19,7 @@ public class RegisterUserRequestValidation : AbstractValidator<RegisterUserReque
             .Length(7, 150);
 
         RuleFor(c => c.Name)
-            .NotEmpty().WithMessage(Errors.Messages.User.EmptyName)
+            .NotEmpty().WithMessage(ErrorMessages.User.EmptyName)
             .NotNull();
         
         RuleFor(c => c.LastName)
