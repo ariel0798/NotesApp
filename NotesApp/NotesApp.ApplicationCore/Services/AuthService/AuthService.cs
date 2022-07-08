@@ -13,6 +13,7 @@ using NotesApp.Domain.Models;
 using NotesApp.ApplicationCore.Authentication;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
 using NotesApp.ApplicationCore.Authentication.Models;
+using NotesApp.ApplicationCore.Extensions;
 using NotesApp.Domain.Errors.Exceptions;
 using NotesApp.Domain.Errors.Messages;
 
@@ -43,16 +44,13 @@ public class AuthService : IAuthService
     {
         var validationResult = await _validatorRegister.ValidateAsync(registerUserRequest);
         if (!validationResult.IsValid)
-        {
-            var validationException = new ValidationException(validationResult.Errors);
-            return new Result<bool>(validationException);
-        }
+            return new Result<bool>().CreateValidationException<bool>(validationResult.Errors);
 
         var userQuery = new GetUserByEmailQuery { Email = registerUserRequest.Email };
         var emailUser = await _mediator.Send(userQuery);
         
         if (emailUser != null)
-            return new Result<bool>(new EmailDuplicatedException(ErrorMessages.User.DuplicatedEmail));
+            return new Result<bool>().CreateException<bool,EmailDuplicatedException>();
         
         _passwordHasher.CreatePasswordHash(registerUserRequest.Password, out string passwordHash, out string passwordSalt);
 
@@ -75,12 +73,10 @@ public class AuthService : IAuthService
         var user = await  _mediator.Send(query);
 
         if (user == null)
-            return new Result<JwtToken>(
-                new InvalidCredentialException(ErrorMessages.Authentication.InvalidCredentials));
+            return new Result<JwtToken>().CreateException<JwtToken,InvalidCredentialException>();
 
         if (!_passwordHasher.VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt))
-            return new Result<JwtToken>(
-                new InvalidCredentialException(ErrorMessages.Authentication.InvalidCredentials));
+            return new Result<JwtToken>().CreateException<JwtToken,InvalidCredentialException>();
 
         var fullToken = await SetTokenAndRefreshToken(user);
         
@@ -97,12 +93,10 @@ public class AuthService : IAuthService
         var user = await  _mediator.Send(query);
         
         if (user == null)
-            return new Result<JwtToken>(
-                new InvalidCredentialException(ErrorMessages.Authentication.InvalidCredentials));
+            return new Result<JwtToken>().CreateException<JwtToken,InvalidCredentialException>();
 
         if (user.TokenExpires < DateTime.Now)
-            return new Result<JwtToken>(
-                new InvalidCredentialException(ErrorMessages.Authentication.InvalidCredentials));
+            return new Result<JwtToken>().CreateException<JwtToken,InvalidCredentialException>();
         
         var fullToken = await SetTokenAndRefreshToken(user);
         
