@@ -27,6 +27,9 @@ public static class ControllerExtensions
                 EmailDuplicatedException emailDuplicatedException => new ConflictObjectResult(
                     ProblemDetailsConflict(emailDuplicatedException.Message)),
                 
+                NoteNotFoundException noteNotFoundException => new NotFoundObjectResult(
+                    ProblemDetailsNotFound(noteNotFoundException.Message)),
+                
                 _ => new StatusCodeResult(500)
             };
         });
@@ -39,6 +42,16 @@ public static class ControllerExtensions
             Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8",
             Title = message,
             Status = (int)HttpStatusCode.Conflict,
+        };
+    }
+    
+    private static ProblemDetails ProblemDetailsNotFound(string message)
+    {
+        return new ProblemDetails()
+        {
+            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4",
+            Title = message,
+            Status = (int)HttpStatusCode.NotFound,
         };
     }
 }
