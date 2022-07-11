@@ -7,11 +7,11 @@ namespace NotesApp.ApplicationCore.Services.NoteServices;
 public interface INoteService
 {
     Task<Result<GetNoteDetailResponse>> CreateNoteDetail(CreateNoteRequest createNoteRequest);
-    Task<GetNoteDetailResponse?> GetNoteDetailById(string noteDetailId);
-    Task<List<GetNoteDetailResponse>> GetAllNoteDetails();
-    Task<List<GetNoteDetailResponse>> GetAllNoteDetailsTrash();
-    Task<GetNoteDetailResponse> UpdateNoteDetail(UpdateNoteDetailRequest updateNoteDetailRequest);
-    Task<bool> RecoverNoteDetail(string noteDetailId);
-    Task<bool> SoftDeleteNoteDetail(string noteDetailId);
-    Task<bool> DeleteNoteDetail(string noteDetailId);
+    Task<Result<GetNoteDetailResponse>> GetNoteDetailById(string noteDetailId);
+    Task<Result<List<GetNoteDetailResponse>>> GetAllNoteDetails();
+    Task<Result<List<GetNoteDetailResponse>>> GetAllNoteDetailsTrash();
+    Task<Result<GetNoteDetailResponse>> UpdateNoteDetail(UpdateNoteDetailRequest updateNoteDetailRequest);
+    Task<Result<bool>> RecoverNoteDetail(string noteDetailId);
+    Task<Result<bool>> SoftDeleteNoteDetail(string noteDetailId);
+    Task<Result<bool>> DeleteNoteDetail(string noteDetailId);
 }

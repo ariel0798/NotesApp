@@ -29,28 +29,28 @@ public class NoteController : Controller
     public async Task<IActionResult> GetAllNoteDetails()
     {
         var result = await _noteService.GetAllNoteDetails();
-        return Ok(result);
+        return result.ToOk();
     }
     
     [HttpGet("trash")]
     public async Task<IActionResult> GetAllNoteDetailsTrash()
     {
         var result = await _noteService.GetAllNoteDetailsTrash();
-        return Ok(result);
+        return result.ToOk();
     }
     
     [HttpGet("{noteDetailId}")]
     public async Task<IActionResult> GetNoteDetailById(string noteDetailId)
     {
         var result = await _noteService.GetNoteDetailById(noteDetailId);
-        return Ok(result);
+        return result.ToOk();
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateNoteDetail(UpdateNoteDetailRequest updateNoteDetailRequest)
     {
         var result = await _noteService.UpdateNoteDetail(updateNoteDetailRequest);
-        return Ok(result);
+        return result.ToOk();
     }
 
     [HttpPut("recover")]
@@ -64,13 +64,13 @@ public class NoteController : Controller
     public async Task<IActionResult> SoftDeleteNoteDetail(string noteDetailId)
     {
         var result = await _noteService.SoftDeleteNoteDetail(noteDetailId);
-        return Ok(result);
+        return result.ToOk();
     }
     
     [HttpDelete("{noteDetailId}")]
     public async Task<IActionResult> DeleteNoteDetail(string noteDetailId)
     {
         var result = await _noteService.DeleteNoteDetail(noteDetailId);
-        return Ok(result);
+        return result.ToOk();
     }
 }
