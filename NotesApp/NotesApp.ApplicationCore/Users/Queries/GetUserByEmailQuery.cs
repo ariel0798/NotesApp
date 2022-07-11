@@ -5,5 +5,5 @@ namespace NotesApp.ApplicationCore.Users.Queries;
 
 public class GetUserByEmailQuery : IRequest<User>
 {
-    public string Email { get; init; }
+    public string Email { get; set; }
 }
