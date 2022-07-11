@@ -1,12 +1,13 @@
 using NotesApp.Api.Extensions;
+using NotesApp.ApplicationCore;
 using NotesApp.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services
-        .AddInfrastructure(builder.Configuration);
     builder.RegisterServices(typeof(Program));
-    
+    builder.Services
+        .AddInfrastructure(builder.Configuration)
+        .AddApplication();
 }
 
 
