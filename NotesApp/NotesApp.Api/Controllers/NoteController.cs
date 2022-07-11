@@ -18,7 +18,6 @@ public class NoteController : Controller
     }
     
     [HttpPost]
-    
     public async Task<IActionResult> CreateNoteDetail(CreateNoteRequest createNoteRequest)
     {
         var result = await _noteService.CreateNoteDetail(createNoteRequest);
@@ -32,14 +31,14 @@ public class NoteController : Controller
         return result.ToOk();
     }
     
-    [HttpGet("trash")]
+    [HttpGet(ApiRoutes.Notes.Trash)]
     public async Task<IActionResult> GetAllNoteDetailsTrash()
     {
         var result = await _noteService.GetAllNoteDetailsTrash();
         return result.ToOk();
     }
     
-    [HttpGet("{noteDetailId}")]
+    [HttpGet(ApiRoutes.Notes.NoteDetailId)]
     public async Task<IActionResult> GetNoteDetailById(string noteDetailId)
     {
         var result = await _noteService.GetNoteDetailById(noteDetailId);
@@ -53,21 +52,21 @@ public class NoteController : Controller
         return result.ToOk();
     }
 
-    [HttpPut("recover")]
+    [HttpPut(ApiRoutes.Notes.Recover)]
     public async Task<IActionResult> RecoverNoteDetail(string noteDetailId)
     {
         var result = await _noteService.RecoverNoteDetail(noteDetailId);
-        return Ok(result);
+        return result.ToOk();
     }
     
-    [HttpDelete("{noteDetailId}/soft-delete")]
+    [HttpDelete(ApiRoutes.Notes.SoftDeleteByNoteDetailId)]
     public async Task<IActionResult> SoftDeleteNoteDetail(string noteDetailId)
     {
         var result = await _noteService.SoftDeleteNoteDetail(noteDetailId);
         return result.ToOk();
     }
     
-    [HttpDelete("{noteDetailId}")]
+    [HttpDelete(ApiRoutes.Notes.NoteDetailId)]
     public async Task<IActionResult> DeleteNoteDetail(string noteDetailId)
     {
         var result = await _noteService.DeleteNoteDetail(noteDetailId);

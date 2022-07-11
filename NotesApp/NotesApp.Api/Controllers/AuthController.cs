@@ -17,7 +17,7 @@ public class AuthController : Controller
         _authService = authService;
     }
 
-    [HttpPost("register")]
+    [HttpPost(ApiRoutes.Authentication.Registration)]
     public async Task<IActionResult> Register(RegisterUserRequest registerUserRequest)
     {
         var result = await _authService.RegisterUser(registerUserRequest);
@@ -25,7 +25,7 @@ public class AuthController : Controller
         return result.ToOk();
     }
     
-    [HttpPost("login")]
+    [HttpPost(ApiRoutes.Authentication.Login)]
     public async Task<IActionResult> Login(LoginRequest loginRequest)
     {
         var result = await _authService.LoginUser(loginRequest);
