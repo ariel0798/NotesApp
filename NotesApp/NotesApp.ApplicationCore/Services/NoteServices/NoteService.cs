@@ -190,8 +190,8 @@ public class NoteService : INoteService
         };
         
         var noteDetail =  await _mediator.Send(command);
-        
-        return noteDetail != null ? true : false ;
+
+        return noteDetail != null ? true : new Result<bool>().CreateException<bool,NoteNotFoundException>(); ;
     }
     private async Task<string?> GetNoteId()
     {
