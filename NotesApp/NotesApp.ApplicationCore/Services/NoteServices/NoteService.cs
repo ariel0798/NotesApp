@@ -19,14 +19,16 @@ public class NoteService : INoteService
     private readonly IMapper _mapper;
     private readonly IAuthService _authService;
     private readonly IValidator<CreateNoteRequest> _validatorCreateNote;
+    private readonly IValidator<UpdateNoteDetailRequest> _validatorUpdateNote;
         
 
-    public NoteService(IMediator mediator, IMapper mapper, IAuthService authService, IValidator<CreateNoteRequest> validatorCreateNote)
+    public NoteService(IMediator mediator, IMapper mapper, IAuthService authService, IValidator<CreateNoteRequest> validatorCreateNote, IValidator<UpdateNoteDetailRequest> validatorUpdateNote)
     {
         _mediator = mediator;
         _mapper = mapper;
         _authService = authService;
         _validatorCreateNote = validatorCreateNote;
+        _validatorUpdateNote = validatorUpdateNote;
     }
     
     
@@ -51,12 +53,12 @@ public class NoteService : INoteService
         return noteDetailDto;
     }
 
-    public async Task<List<GetNoteDetailResponse>> GetAllNoteDetails()
+    public async Task<Result<List<GetNoteDetailResponse>>> GetAllNoteDetails()
     {
         var noteId = await GetNoteId();
         
         if (noteId == null)
-            return null;
+            return new Result<List<GetNoteDetailResponse>>().CreateException<List<GetNoteDetailResponse>,NoteNotFoundException>();
 
         var query = new GetNoteByIdQuery() { NoteId = noteId };
 
@@ -67,12 +69,13 @@ public class NoteService : INoteService
         return noteDetailsDto;
     }
     
-    public async Task<List<GetNoteDetailResponse>> GetAllNoteDetailsTrash()
+    public async Task<Result<List<GetNoteDetailResponse>>> GetAllNoteDetailsTrash()
     {
         var noteId = await GetNoteId();
         
         if (noteId == null)
-            return null;
+            return new Result<List<GetNoteDetailResponse>>().CreateException<List<GetNoteDetailResponse>,NoteNotFoundException>();
+
 
         var query = new GetNoteByIdQuery() { NoteId = noteId };
 
@@ -82,12 +85,13 @@ public class NoteService : INoteService
         var noteDetailsDto = _mapper.Map<List<GetNoteDetailResponse>>(noteDetailNonDeleted);
         return noteDetailsDto;
     }
-    public async Task<GetNoteDetailResponse?> GetNoteDetailById(string noteDetailId)
+    public async Task<Result<GetNoteDetailResponse>> GetNoteDetailById(string noteDetailId)
     {
         var noteId = await GetNoteId();
         
         if (noteId == null)
-            return null;
+            return new Result<GetNoteDetailResponse>().CreateException<GetNoteDetailResponse,NoteNotFoundException>();
+
 
         var query = new GetNoteDetailByIdQuery()
         {
@@ -97,17 +101,24 @@ public class NoteService : INoteService
 
         var noteDetail = await _mediator.Send(query);
         
+        if (noteDetail == null)
+            return new Result<GetNoteDetailResponse>().CreateException<GetNoteDetailResponse,NoteNotFoundException>();
+        
         var noteDetailDto = _mapper.Map<GetNoteDetailResponse>(noteDetail);
         
         return noteDetailDto;
     }
 
-    public async Task<GetNoteDetailResponse> UpdateNoteDetail(UpdateNoteDetailRequest noteDetailDto)
+    public async Task<Result<GetNoteDetailResponse>> UpdateNoteDetail(UpdateNoteDetailRequest noteDetailDto)
     {
+        var validationResult = await _validatorUpdateNote.ValidateAsync(noteDetailDto);
+        if (!validationResult.IsValid)
+            return new Result<GetNoteDetailResponse>().CreateValidationException(validationResult.Errors);
+        
         var noteId = await GetNoteId();
         
         if (noteId == null)
-            return null;
+            return new Result<GetNoteDetailResponse>().CreateException<GetNoteDetailResponse,NoteNotFoundException>();
 
         var command = _mapper.Map<UpdateNoteDetailCommand>(noteDetailDto);
 
@@ -115,17 +126,20 @@ public class NoteService : INoteService
         
         var noteDetail = await _mediator.Send(command);
         
+        if (noteDetail == null)
+            return new Result<GetNoteDetailResponse>().CreateException<GetNoteDetailResponse,NoteNotFoundException>();
+
         var noteDetailGetDto = _mapper.Map<GetNoteDetailResponse>(noteDetail);
         
         return noteDetailGetDto;
     }
 
-    public async Task<bool> RecoverNoteDetail(string noteDetailId)
+    public async Task<Result<bool>> RecoverNoteDetail(string noteDetailId)
     {
         var noteId = await GetNoteId();
         
         if (noteId == null)
-            return false;
+            return new Result<bool>().CreateException<bool,NoteNotFoundException>();
 
         var command = new RecoverNoteDetailCommand()
         {
@@ -134,16 +148,19 @@ public class NoteService : INoteService
         };
 
         var noteDetail = await _mediator.Send(command);
+        
+        if (noteDetail == null)
+            return new Result<bool>().CreateException<bool,NoteNotFoundException>();
 
         return noteDetail.IsDeleted;
     }
     
-    public async Task<bool> SoftDeleteNoteDetail(string noteDetailId)
+    public async Task<Result<bool>> SoftDeleteNoteDetail(string noteDetailId)
     {
         var noteId = await GetNoteId();
         
         if (noteId == null)
-            return false;
+            return new Result<bool>().CreateException<bool,NoteNotFoundException>();
 
         var command = new SoftDeleteNoteDetailCommand()
         {
@@ -152,25 +169,29 @@ public class NoteService : INoteService
         };
 
         var noteDetail = await _mediator.Send(command);
-
+        
+        if (noteDetail == null)
+            return new Result<bool>().CreateException<bool,NoteNotFoundException>();
+        
         return noteDetail.IsDeleted;
     }
     
-    public async Task<bool> DeleteNoteDetail(string noteDetailId)
+    public async Task<Result<bool>> DeleteNoteDetail(string noteDetailId)
     {
         var noteId = await GetNoteId();
         
         if (noteId == null)
-            return false;
+            return new Result<bool>().CreateException<bool,NoteNotFoundException>();
 
         var command = new DeleteNoteDetailCommand()
         {
             NoteDetailId = noteDetailId,
             NoteId = noteId
         };
-        await _mediator.Send(command);
-
-        return await _mediator.Send(command) == null ? true : false ;
+        
+        var noteDetail =  await _mediator.Send(command);
+        
+        return noteDetail != null ? true : false ;
     }
     private async Task<string?> GetNoteId()
     {
