@@ -16,6 +16,7 @@ public class GetUserByEmailQueryHandler : IRequestHandler<GetUserByEmailQuery,Us
     
     public async Task<User> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
     {
+        request.Email = request.Email.ToLower();
         var users = await _userRepository.GetAll();
 
         foreach (var user in users)
