@@ -6,6 +6,7 @@ services:
       - "6379:6379"
       - "8001:8001"
     container_name: redis
+    restart: unless-stopped
   notes.api:
     image: ${DOCKER_REGISTRY-}notesappapi
     container_name: notesapi
@@ -16,3 +17,4 @@ services:
       - "8007:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+    restart: unless-stopped
