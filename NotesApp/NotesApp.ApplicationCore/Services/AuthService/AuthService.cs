@@ -5,7 +5,7 @@ using AutoMapper;
 using FluentValidation;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Http;
-using NotesApp.ApplicationCore.Contracts.User.Requests;
+using NotesApp.ApplicationCore.Contracts.Authentication.Requests;
 using NotesApp.ApplicationCore.Notes.Commands;
 using NotesApp.ApplicationCore.Users.Commands;
 using NotesApp.ApplicationCore.Users.Queries;
