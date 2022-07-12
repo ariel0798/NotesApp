@@ -1,3 +1,4 @@
+using Hangfire;
 using NotesApp.Api.Middlewares;
 
 namespace NotesApp.Api.Registrars.WebApp;
@@ -18,6 +19,8 @@ public class MvcWebAppRegistrar :  IWebApplicationRegistrar
         app.UseAuthentication();
 
         app.UseAuthorization();
+        
+        app.UseHangfireDashboard();
 
         app.MapControllers();
     }
