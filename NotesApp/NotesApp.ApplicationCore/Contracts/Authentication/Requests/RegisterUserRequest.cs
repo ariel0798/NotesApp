@@ -1,4 +1,4 @@
-namespace NotesApp.ApplicationCore.Contracts.User.Requests;
+namespace NotesApp.ApplicationCore.Contracts.Authentication.Requests;
 
 public class RegisterUserRequest
 {

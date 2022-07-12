@@ -1,5 +1,5 @@
 using FluentValidation;
-using NotesApp.ApplicationCore.Contracts.User.Requests;
+using NotesApp.ApplicationCore.Contracts.Authentication.Requests;
 using NotesApp.Domain.Errors.Messages;
 
 namespace NotesApp.ApplicationCore.Validation.Requests.Users;
