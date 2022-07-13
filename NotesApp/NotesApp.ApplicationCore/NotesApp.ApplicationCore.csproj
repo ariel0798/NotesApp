@@ -30,4 +30,10 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Authentication\Queries" />
+      <Folder Include="Contracts\Authentication" />
+      <Folder Include="Contracts\User" />
+    </ItemGroup>
+
 </Project>

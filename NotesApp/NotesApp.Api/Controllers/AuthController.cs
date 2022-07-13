@@ -1,7 +1,12 @@
+using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NotesApp.Api.Extensions;
+using NotesApp.ApplicationCore.Authentication.Commands.Login;
+using NotesApp.ApplicationCore.Authentication.Commands.RefreshToken;
+using NotesApp.ApplicationCore.Authentication.Commands.Register;
 using NotesApp.ApplicationCore.Authentication.Models;
-using NotesApp.ApplicationCore.Contracts.User.Requests;
+using NotesApp.ApplicationCore.Contracts.Authentication.Requests;
 using NotesApp.ApplicationCore.Services.AuthService;
 
 namespace NotesApp.Api.Controllers;
@@ -11,16 +16,22 @@ namespace NotesApp.Api.Controllers;
 public class AuthController : Controller
 {
     private readonly IAuthService _authService;
+    private readonly IMapper _mapper;
+    private readonly ISender _mediator;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, IMapper mapper, ISender mediator)
     {
         _authService = authService;
+        _mapper = mapper;
+        _mediator = mediator;
     }
 
     [HttpPost(ApiRoutes.Authentication.Registration)]
     public async Task<IActionResult> Register(RegisterUserRequest registerUserRequest)
     {
-        var result = await _authService.RegisterUser(registerUserRequest);
+        var command = _mapper.Map<RegisterCommand>(registerUserRequest);
+
+        var result = await _mediator.Send(command);
 
         return result.ToOk();
     }
@@ -28,7 +39,9 @@ public class AuthController : Controller
     [HttpPost(ApiRoutes.Authentication.Login)]
     public async Task<IActionResult> Login(LoginRequest loginRequest)
     {
-        var result = await _authService.LoginUser(loginRequest);
+        var command = _mapper.Map<LoginCommand>(loginRequest);
+        
+        var result = await _mediator.Send(command);
 
         if (result.IsSuccess)
         {
@@ -44,8 +57,10 @@ public class AuthController : Controller
     public async Task<IActionResult> RefreshToken()
     {
         var refreshToken = Request.Cookies["refreshToken"];
-
-        var result = await _authService.RefreshToken(refreshToken);
+        
+        var command = new RefreshTokenCommand(refreshToken);
+        
+        var result = await _mediator.Send(command);
         
         if(result.IsSuccess)
         {
