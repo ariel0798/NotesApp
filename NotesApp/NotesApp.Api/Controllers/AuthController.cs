@@ -7,7 +7,6 @@ using NotesApp.ApplicationCore.Authentication.Commands.RefreshToken;
 using NotesApp.ApplicationCore.Authentication.Commands.Register;
 using NotesApp.ApplicationCore.Authentication.Models;
 using NotesApp.ApplicationCore.Contracts.Authentication.Requests;
-using NotesApp.ApplicationCore.Services.AuthService;
 
 namespace NotesApp.Api.Controllers;
 
@@ -15,13 +14,11 @@ namespace NotesApp.Api.Controllers;
 [ApiController]
 public class AuthController : Controller
 {
-    private readonly IAuthService _authService;
     private readonly IMapper _mapper;
     private readonly ISender _mediator;
 
-    public AuthController(IAuthService authService, IMapper mapper, ISender mediator)
+    public AuthController( IMapper mapper, ISender mediator)
     {
-        _authService = authService;
         _mapper = mapper;
         _mediator = mediator;
     }
