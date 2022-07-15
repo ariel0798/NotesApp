@@ -50,7 +50,7 @@ public class AuthController : Controller
         return resultToken.ToOk();
     }
 
-    [HttpPost("refresh-token")]
+    [HttpPost(ApiRoutes.Authentication.RefreshToken)]
     public async Task<IActionResult> RefreshToken()
     {
         var refreshToken = Request.Cookies["refreshToken"];
