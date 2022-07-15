@@ -2,7 +2,7 @@ using FluentValidation;
 using NotesApp.ApplicationCore.Contracts.Authentication.Requests;
 using NotesApp.Domain.Errors.Messages;
 
-namespace NotesApp.ApplicationCore.Validation.Requests.Users;
+namespace NotesApp.ApplicationCore.Validation.Requests.Authentication;
 
 public class RegisterUserRequestValidation : AbstractValidator<RegisterUserRequest>
 {
