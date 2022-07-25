@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using LanguageExt.Common;
 using MediatR;
 using NotesApp.ApplicationCore.Contracts.Note.Responses;
@@ -13,16 +14,23 @@ public class CreateNoteDetailCommandHandler : NoteBase,  IRequestHandler<CreateN
 {
     private readonly INoteRepository _noteRepository;
     private readonly IMapper _mapper;
+    private readonly IValidator<CreateNoteDetailCommand> _validator;
 
-    public CreateNoteDetailCommandHandler(INoteRepository noteRepository, ISender mediator, IMapper mapper)
+    public CreateNoteDetailCommandHandler(INoteRepository noteRepository, ISender mediator, IMapper mapper, IValidator<CreateNoteDetailCommand> validator)
     : base(mediator)
     {
         _noteRepository = noteRepository;
         _mapper = mapper;
+        _validator = validator;
     }
 
     public async Task<Result<GetNoteDetailResponse>> Handle(CreateNoteDetailCommand request, CancellationToken cancellationToken)
     {
+        var validationResult = await _validator.ValidateAsync(request,cancellationToken);
+        
+        if (!validationResult.IsValid)
+            return new Result<GetNoteDetailResponse>().CreateValidationException<GetNoteDetailResponse>(validationResult.Errors);
+        
         var noteId = await GetNoteId(cancellationToken);
 
         if (noteId == null)

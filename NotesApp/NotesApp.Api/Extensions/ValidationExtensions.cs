@@ -13,19 +13,16 @@ public static class ValidationExtensions
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
             Status = 400
         };
-        foreach (var validationFailure in ex.Errors)
+
+        var errorDictionary = ex.Errors.GroupBy(x => x.PropertyName)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Select(x => x.ErrorMessage).ToArray()
+            );
+        
+        foreach (var errorPair in errorDictionary)
         {
-            if (error.Errors.ContainsKey(validationFailure.PropertyName))
-            {
-                error.Errors[validationFailure.PropertyName] =
-                    error.Errors[validationFailure.PropertyName]
-                        .Concat(new[] { validationFailure.ErrorMessage }).ToArray(); 
-                continue;
-            }
-                
-            error.Errors.Add(new KeyValuePair<string, string[]>(
-                validationFailure.PropertyName, 
-                new[] { validationFailure.ErrorMessage }));
+            error.Errors.Add(errorPair);
         }
 
         return error;
