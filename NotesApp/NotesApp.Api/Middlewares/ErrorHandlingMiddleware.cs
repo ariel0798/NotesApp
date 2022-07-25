@@ -22,6 +22,7 @@ public class ErrorHandlingMiddleware
         {
             await _next(context);
         }
+        catch (OperationCanceledException e){}
         catch (Exception ex)
         {
             _logger.LogError($"An error was ocurred during the process. Path: {context.Request.Path}. Message {ex.Message}");
