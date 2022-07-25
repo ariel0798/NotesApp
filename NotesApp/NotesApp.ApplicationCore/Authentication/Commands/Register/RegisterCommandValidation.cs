@@ -1,12 +1,11 @@
 using FluentValidation;
-using NotesApp.ApplicationCore.Contracts.Authentication.Requests;
 using NotesApp.Domain.Errors.Messages;
 
-namespace NotesApp.ApplicationCore.Validation.Requests.Authentication;
+namespace NotesApp.ApplicationCore.Authentication.Commands.Register;
 
-public class RegisterUserRequestValidation : AbstractValidator<RegisterUserRequest>
+public class RegisterCommandValidation : AbstractValidator<RegisterCommand>
 {
-    public RegisterUserRequestValidation()
+    public RegisterCommandValidation()
     {
         RuleFor(c => c.Email)
             .NotEmpty().WithMessage(ErrorMessages.User.EmptyEmail)

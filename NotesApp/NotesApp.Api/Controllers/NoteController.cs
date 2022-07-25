@@ -12,7 +12,6 @@ using NotesApp.ApplicationCore.Notes.Commands.UpdateNoteDetail;
 using NotesApp.ApplicationCore.Notes.Queries.GetAllNoteDetails;
 using NotesApp.ApplicationCore.Notes.Queries.GetAllNoteDetailsTrash;
 using NotesApp.ApplicationCore.Notes.Queries.GetNoteDetailById;
-using NotesApp.ApplicationCore.Services.NoteServices;
 
 namespace NotesApp.Api.Controllers;
 [Route("api/[controller]")]

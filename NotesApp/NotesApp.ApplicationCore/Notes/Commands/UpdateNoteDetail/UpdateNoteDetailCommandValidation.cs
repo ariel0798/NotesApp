@@ -1,12 +1,11 @@
 using FluentValidation;
-using NotesApp.ApplicationCore.Contracts.Note.Requests;
 using NotesApp.Domain.Errors.Messages;
 
-namespace NotesApp.ApplicationCore.Validation.Requests.Notes;
+namespace NotesApp.ApplicationCore.Notes.Commands.UpdateNoteDetail;
 
-public class UpdateNoteDetailRequestValidation : AbstractValidator<UpdateNoteDetailRequest>
+public class UpdateNoteDetailCommandValidation : AbstractValidator<UpdateNoteDetailCommand>
 {
-    public UpdateNoteDetailRequestValidation()
+    public UpdateNoteDetailCommandValidation()
     {
         RuleFor(n => n.NoteDetailId)
             .NotNull();

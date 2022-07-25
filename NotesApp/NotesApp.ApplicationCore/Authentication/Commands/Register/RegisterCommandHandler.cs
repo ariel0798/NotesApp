@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using LanguageExt.Common;
 using MediatR;
 using NotesApp.ApplicationCore.Extensions;
@@ -14,17 +15,24 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand,Result<boo
     private readonly INoteRepository _noteRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IMapper _mapper;
+    private readonly IValidator<RegisterCommand> _validator;
 
-    public RegisterCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, IMapper mapper, INoteRepository noteRepository)
+    public RegisterCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, IMapper mapper, INoteRepository noteRepository, IValidator<RegisterCommand> validator)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _mapper = mapper;
         _noteRepository = noteRepository;
+        _validator = validator;
     }
     
     public async Task<Result<bool>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
+        var validationResult = await _validator.ValidateAsync(request,cancellationToken);
+        
+        if (!validationResult.IsValid)
+            return new Result<bool>().CreateValidationException<bool>(validationResult.Errors);
+        
         if( await GetUserByEmail(request.Email) != null)
             return new Result<bool>().CreateException<bool,EmailDuplicatedException>();
         

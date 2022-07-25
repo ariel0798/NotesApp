@@ -1,12 +1,11 @@
 using FluentValidation;
-using NotesApp.ApplicationCore.Contracts.Note.Requests;
 using NotesApp.Domain.Errors.Messages;
 
-namespace NotesApp.ApplicationCore.Validation.Requests.Notes;
+namespace NotesApp.ApplicationCore.Notes.Commands.CreateNoteDetail;
 
-public class CreateNoteRequestValidation : AbstractValidator<CreateNoteRequest>
+public class CreateNoteDetailCommandValidation : AbstractValidator<CreateNoteDetailCommand>
 {
-    public CreateNoteRequestValidation()
+    public CreateNoteDetailCommandValidation()
     {
         RuleFor(n => n.Title)
             .NotEmpty().WithMessage(ErrorMessages.Note.EmptyTitle)
