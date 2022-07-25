@@ -24,21 +24,21 @@ public class AuthController : Controller
     }
 
     [HttpPost(ApiRoutes.Authentication.Register)]
-    public async Task<IActionResult> Register(RegisterUserRequest registerUserRequest)
+    public async Task<IActionResult> Register(RegisterUserRequest registerUserRequest, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<RegisterCommand>(registerUserRequest);
 
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.ToOk();
     }
     
     [HttpPost(ApiRoutes.Authentication.Login)]
-    public async Task<IActionResult> Login(LoginRequest loginRequest)
+    public async Task<IActionResult> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<LoginCommand>(loginRequest);
         
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         if (result.IsSuccess)
         {
@@ -51,13 +51,13 @@ public class AuthController : Controller
     }
 
     [HttpPost(ApiRoutes.Authentication.RefreshToken)]
-    public async Task<IActionResult> RefreshToken()
+    public async Task<IActionResult> RefreshToken(CancellationToken cancellationToken)
     {
         var refreshToken = Request.Cookies["refreshToken"];
         
         var command = new RefreshTokenCommand(refreshToken);
         
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
         
         if(result.IsSuccess)
         {

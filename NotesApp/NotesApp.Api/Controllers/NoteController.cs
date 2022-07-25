@@ -29,60 +29,60 @@ public class NoteController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateNoteDetail(CreateNoteRequest createNoteRequest)
+    public async Task<IActionResult> CreateNoteDetail(CreateNoteRequest createNoteRequest, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<CreateNoteDetailCommand>(createNoteRequest);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
         return result.ToOk();
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllNoteDetails()
+    public async Task<IActionResult> GetAllNoteDetails(CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetAllNoteDetailsQuery());
+        var result = await _mediator.Send(new GetAllNoteDetailsQuery(), cancellationToken);
         return result.ToOk();
     }
     
     [HttpGet(ApiRoutes.Notes.Trash)]
-    public async Task<IActionResult> GetAllNoteDetailsTrash()
+    public async Task<IActionResult> GetAllNoteDetailsTrash(CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetAllNoteDetailsTrashQuery());
+        var result = await _mediator.Send(new GetAllNoteDetailsTrashQuery(), cancellationToken);
         return result.ToOk();
     }
     
     [HttpGet(ApiRoutes.Notes.NoteDetailId)]
-    public async Task<IActionResult> GetNoteDetailById(string noteDetailId)
+    public async Task<IActionResult> GetNoteDetailById(string noteDetailId, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetNoteDetailByIdQuery(noteDetailId));
+        var result = await _mediator.Send(new GetNoteDetailByIdQuery(noteDetailId), cancellationToken);
         return result.ToOk();
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateNoteDetail(UpdateNoteDetailRequest updateNoteDetailRequest)
+    public async Task<IActionResult> UpdateNoteDetail(UpdateNoteDetailRequest updateNoteDetailRequest, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<UpdateNoteDetailCommand>(updateNoteDetailRequest);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
         return result.ToOk();
     }
 
     [HttpPut(ApiRoutes.Notes.Recover)]
-    public async Task<IActionResult> RecoverNoteDetail(string noteDetailId)
+    public async Task<IActionResult> RecoverNoteDetail(string noteDetailId, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new RecoverNoteDetailCommand(noteDetailId));
+        var result = await _mediator.Send(new RecoverNoteDetailCommand(noteDetailId), cancellationToken);
         return result.ToOk();
     }
     
     [HttpDelete(ApiRoutes.Notes.SoftDeleteByNoteDetailId)]
-    public async Task<IActionResult> SoftDeleteNoteDetail(string noteDetailId)
+    public async Task<IActionResult> SoftDeleteNoteDetail(string noteDetailId, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new SoftDeleteNoteDetailCommand(noteDetailId));
+        var result = await _mediator.Send(new SoftDeleteNoteDetailCommand(noteDetailId), cancellationToken);
         return result.ToOk();
     }
     
     [HttpDelete(ApiRoutes.Notes.NoteDetailId)]
-    public async Task<IActionResult> DeleteNoteDetail(string noteDetailId)
+    public async Task<IActionResult> DeleteNoteDetail(string noteDetailId, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new DeleteNoteDetailCommand(noteDetailId));
+        var result = await _mediator.Send(new DeleteNoteDetailCommand(noteDetailId), cancellationToken);
         return result.ToOk();
     }
 }
