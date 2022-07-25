@@ -23,7 +23,7 @@ public class AuthController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost(ApiRoutes.Authentication.Registration)]
+    [HttpPost(ApiRoutes.Authentication.Register)]
     public async Task<IActionResult> Register(RegisterUserRequest registerUserRequest)
     {
         var command = _mapper.Map<RegisterCommand>(registerUserRequest);
