@@ -5,7 +5,7 @@ public static class ApiRoutes
     public static class Authentication
     {
         public const string Login = "login";
-        public const string Registration = "registration";
+        public const string Register= "register";
         public const string RefreshToken = "refresh-token";
     }
     public static class Notes
