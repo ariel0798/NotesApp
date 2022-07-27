@@ -1,4 +1,5 @@
 using AutoMapper;
+using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using NotesApp.ApplicationCore.Notes.Commands.UpdateNoteDetail;
 using NotesApp.ApplicationCore.Notes.Queries.GetAllNoteDetails;
 using NotesApp.ApplicationCore.Notes.Queries.GetAllNoteDetailsTrash;
 using NotesApp.ApplicationCore.Notes.Queries.GetNoteDetailById;
+using NotesApp.ApplicationCore.Services.NoteServices;
 
 namespace NotesApp.Api.Controllers;
 [Route("api/[controller]")]
@@ -21,11 +23,15 @@ public class NoteController : Controller
 {
     private readonly ISender _mediator;
     private readonly IMapper _mapper;
+    private readonly IRecurringJobManager _recurringJobManager;
+    private readonly INoteService _noteService;
 
-    public NoteController(ISender mediator, IMapper mapper)
+    public NoteController(ISender mediator, IMapper mapper, IRecurringJobManager recurringJobManager, INoteService noteService)
     {
         _mediator = mediator;
         _mapper = mapper;
+        _recurringJobManager = recurringJobManager;
+        _noteService = noteService;
     }
     
     [HttpPost]
@@ -84,5 +90,13 @@ public class NoteController : Controller
     {
         var result = await _mediator.Send(new DeleteNoteDetailCommand(noteDetailId), cancellationToken);
         return result.ToOk();
+    }
+    
+    [HttpGet(ApiRoutes.Notes.RecurringJobInitializer)]
+    [AllowAnonymous]
+    public ActionResult RemoveDeletedNoteRecurringJob()
+    {
+        _recurringJobManager.AddOrUpdate("RemoveDeletedNoteDetails",  () => _noteService.RemoveDeletedNoteDetails().Wait(), Cron.Daily);
+        return Ok();
     }
 }
