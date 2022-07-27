@@ -14,6 +14,7 @@ public static class ApiRoutes
         public const string Trash = "trash";
         public const string Recover = "{noteDetailId}/recover";
         public const string SoftDeleteByNoteDetailId = "{noteDetailId}/soft-delete";
-
+        public const string RecurringJobInitializer = "/recurringJob-initializer";
+            
     }
 }
