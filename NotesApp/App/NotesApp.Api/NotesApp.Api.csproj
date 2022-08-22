@@ -4,6 +4,17 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <EnablePreviewFeatures>true</EnablePreviewFeatures>
+        <NoWarn>CA2252</NoWarn>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NotesApp.Infrastructure\NotesApp.Infrastructure.csproj" />
+    </ItemGroup>
 
 </Project>
