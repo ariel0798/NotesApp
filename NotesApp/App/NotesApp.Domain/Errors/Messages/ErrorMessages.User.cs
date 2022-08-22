@@ -4,7 +4,7 @@ public static partial class ErrorMessages
 {
     public static class User
     {
-        public const string DuplicatedEmail = "Email is already exist"; 
+        public const string DuplicatedEmail = "Email already exists"; 
         public const string InvalidEmailFormat = "Invalid email format"; 
         public const string EmptyName = "'Name' must not be empty."; 
         public const string NotNullName = "'Name' can not be null.";

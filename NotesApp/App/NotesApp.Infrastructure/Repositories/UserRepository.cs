@@ -19,17 +19,17 @@ public class UserRepository : GenericRepository<User> , IUserRepository
     {
         await using var connection = _databaseProvider.GetConnection();
         
-        var query = "SELECT * FROM [User] WHERE Email = @email";
+        var query = "SELECT * FROM [User] WHERE Email = @Email";
         
-        return  await connection.QueryFirstOrDefaultAsync<User>(query, query);
+        return  await connection.QueryFirstOrDefaultAsync<User>(query, new {Email = email});
     }
 
     public async Task<User> GetUserByRefreshToken(string refreshToken)
     {
         await using var connection = _databaseProvider.GetConnection();
         
-        var query = "SELECT * FROM [User] WHERE RefreshToken = @refreshToken";
+        var query = "SELECT * FROM [User] WHERE RefreshToken = @RefreshToken";
         
-        return  await connection.QueryFirstOrDefaultAsync<User>(query, query);
+        return  await connection.QueryFirstOrDefaultAsync<User>(query, new {RefreshToken = refreshToken });
     }
 }
