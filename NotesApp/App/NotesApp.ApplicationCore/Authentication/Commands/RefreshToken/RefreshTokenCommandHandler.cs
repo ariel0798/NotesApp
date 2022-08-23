@@ -1,3 +1,4 @@
+using HashidsNet;
 using LanguageExt.Common;
 using MediatR;
 using NotesApp.ApplicationCore.Authentication.Commands.Login;
@@ -13,11 +14,13 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand,Re
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IHashids _hashids;
     
-    public RefreshTokenCommandHandler(IUnitOfWork unitOfWork, IJwtTokenGenerator jwtTokenGenerator)
+    public RefreshTokenCommandHandler(IUnitOfWork unitOfWork, IJwtTokenGenerator jwtTokenGenerator, IHashids hashids)
     {
         _unitOfWork = unitOfWork;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _hashids = hashids;
     }
     
     public async Task<Result<JwtToken>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
@@ -33,7 +36,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand,Re
         if (user.TokenExpires < DateTime.Now)
             return new Result<JwtToken>(ExceptionFactory.InvalidCredentialException);
         
-        var fullToken = await LoginCommandHandler.SetTokenAndRefreshToken(user, _jwtTokenGenerator,_unitOfWork);
+        var fullToken = await LoginCommandHandler.SetTokenAndRefreshToken(user, _jwtTokenGenerator,_unitOfWork, _hashids);
         
         return fullToken;
     }

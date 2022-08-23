@@ -1,5 +1,6 @@
 using AutoMapper;
 using FluentValidation;
+using HashidsNet;
 using LanguageExt.Common;
 using MediatR;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
@@ -16,14 +17,16 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand,Result<Use
     private readonly IMapper _mapper;
     private readonly IValidator<RegisterCommand> _validator;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IHashids _hashids;
     
     public RegisterCommandHandler(IValidator<RegisterCommand> validator, IUnitOfWork unitOfWork, 
-        IMapper mapper, IPasswordHasher passwordHasher)
+        IMapper mapper, IPasswordHasher passwordHasher, IHashids hashids)
     {
         _validator = validator;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _passwordHasher = passwordHasher;
+        _hashids = hashids;
     }
     public async Task<Result<UserResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
@@ -51,7 +54,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand,Result<Use
         await _unitOfWork.Notes.Add(note);
         await _unitOfWork.Save();
 
-        return _mapper.Map<UserResponse>(user);
+        var userResponse = _mapper.Map<UserResponse>(user);
+        userResponse.UserId = _hashids.Encode(user.UserId);
+        return userResponse;
     }
     
     private async Task<User?> GetUserByEmail(string email)

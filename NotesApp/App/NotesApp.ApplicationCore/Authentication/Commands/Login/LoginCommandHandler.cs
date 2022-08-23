@@ -1,3 +1,4 @@
+using HashidsNet;
 using LanguageExt.Common;
 using MediatR;
 using NotesApp.ApplicationCore.Authentication.Commands.RefreshToken;
@@ -14,12 +15,14 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand,Result<JwtToken>
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IHashids _hashids;
     
-    public LoginCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
+    public LoginCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IHashids hashids)
     {
         _unitOfWork = unitOfWork;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _hashids = hashids;
     }
     public async Task<Result<JwtToken>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
@@ -31,7 +34,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand,Result<JwtToken>
         if (!_passwordHasher.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             return new Result<JwtToken>(ExceptionFactory.InvalidCredentialException);
 
-        var fullToken = await SetTokenAndRefreshToken(user,_jwtTokenGenerator,_unitOfWork);
+        var fullToken = await SetTokenAndRefreshToken(user,_jwtTokenGenerator,_unitOfWork, _hashids);
 
         return fullToken;
     }
@@ -42,9 +45,10 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand,Result<JwtToken>
     }
     
     public static async Task<JwtToken> SetTokenAndRefreshToken(User user, IJwtTokenGenerator jwtTokenGenerator,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork, IHashids hashids)
     {
-        var token = jwtTokenGenerator.CreateToken(user.Email);
+        var codeId = hashids.Encode(user.UserId);
+        var token = jwtTokenGenerator.CreateToken(user.Email, codeId);
 
         var fullToken = jwtTokenGenerator.GenerateRefreshToken();
         fullToken.Token = token;
