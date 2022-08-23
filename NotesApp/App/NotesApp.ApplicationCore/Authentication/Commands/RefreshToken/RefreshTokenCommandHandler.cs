@@ -1,5 +1,6 @@
 using LanguageExt.Common;
 using MediatR;
+using NotesApp.ApplicationCore.Authentication.Commands.Login;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
 using NotesApp.ApplicationCore.Authentication.Models;
 using NotesApp.Domain.Errors.Exceptions.Factory;
@@ -32,25 +33,10 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand,Re
         if (user.TokenExpires < DateTime.Now)
             return new Result<JwtToken>(ExceptionFactory.InvalidCredentialException);
         
-        var fullToken = await SetTokenAndRefreshToken(user);
+        var fullToken = await LoginCommandHandler.SetTokenAndRefreshToken(user, _jwtTokenGenerator,_unitOfWork);
         
         return fullToken;
     }
     
-    private async Task<JwtToken> SetTokenAndRefreshToken(User user)
-    {
-        var token = _jwtTokenGenerator.CreateToken(user.Email);
-
-        var fullToken = _jwtTokenGenerator.GenerateRefreshToken();
-        fullToken.Token = token;
-
-        user.RefreshToken = fullToken.RefreshToken;
-        user.TokenCreated = fullToken.Created;
-        user.TokenExpires = fullToken.Expires;
-        
-        _unitOfWork.Users.Update(user);
-        await _unitOfWork.Save();
-
-        return fullToken;
-    }
+    
 }

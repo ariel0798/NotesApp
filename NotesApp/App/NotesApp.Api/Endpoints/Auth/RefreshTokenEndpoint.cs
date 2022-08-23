@@ -23,23 +23,12 @@ public class RefreshTokenEndpoint : IEndpoint
                 if(result.IsSuccess)
                 {
                     var token = result.Match<JwtToken>(obj => obj, null);
-                    SetRefreshToken(token,context);
+                    LoginEndpoint.SetRefreshToken(token,context);
                 }
 
                 var resultToken = result.Map<string>(obj => obj.Token);
                 return resultToken.ToOk();
             }
             ).FindSummary<RefreshTokenEndpoint>();
-    }
-    
-    private static void SetRefreshToken(JwtToken refreshToken, HttpContext context)
-    {
-        var cookieOption = new CookieOptions()
-        {
-            HttpOnly = true,
-            Expires = refreshToken.Expires
-        };
-        
-        context.Response.Cookies.Append("refreshToken", refreshToken.RefreshToken, cookieOption);
     }
 }

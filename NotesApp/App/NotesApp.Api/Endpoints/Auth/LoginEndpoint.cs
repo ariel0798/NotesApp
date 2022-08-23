@@ -32,7 +32,7 @@ public class LoginEndpoint : IEndpoint
             ).FindSummary<LoginEndpoint>();
     }
     
-    private static void SetRefreshToken(JwtToken refreshToken, HttpContext context)
+    public static void SetRefreshToken(JwtToken refreshToken, HttpContext context)
     {
         var cookieOption = new CookieOptions()
         {
