@@ -19,11 +19,12 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _dateTimeProvider = dateTimeProvider;
         _jwtSettings = jwtOptions.Value;
     }
-    public string CreateToken(string email)
+    public string CreateToken(string email, string userId)
     {
         List<Claim> claims = new List<Claim> 
         { 
-            new Claim(ClaimTypes.Name,email)
+            new Claim(ClaimTypes.Name,email),
+            new Claim(ClaimTypes.NameIdentifier, userId)
         };
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_jwtSettings.Secret));
