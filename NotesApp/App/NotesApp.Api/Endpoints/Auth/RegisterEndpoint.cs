@@ -19,6 +19,6 @@ public class RegisterEndpoint : IEndpoint
             
                 return result.ToOk();
             }
-        );
+        ).FindSummary<RegisterEndpoint>();
     }
 }

@@ -27,7 +27,8 @@ public class LoginEndpoint : IEndpoint
 
                 var resultToken = result.Map<string>(obj => obj.Token);
                 return resultToken.ToOk();
-            });
+            }
+            ).FindSummary<LoginEndpoint>();
     }
     
     private static void SetRefreshToken(JwtToken refreshToken, HttpContext context)
@@ -40,5 +41,4 @@ public class LoginEndpoint : IEndpoint
         
         context.Response.Cookies.Append("refreshToken", refreshToken.RefreshToken, cookieOption);
     }
-
 }
