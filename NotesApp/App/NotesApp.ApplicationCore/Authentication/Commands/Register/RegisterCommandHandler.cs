@@ -4,7 +4,7 @@ using LanguageExt.Common;
 using MediatR;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
 using NotesApp.ApplicationCore.Contracts.User.Responses;
-using NotesApp.Domain.Errors.Exceptions;
+using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 using NotesApp.Domain.Models;
 
@@ -33,7 +33,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand,Result<Use
             return new Result<UserResponse>(new ValidationException(validationResult.Errors));
 
         if (await GetUserByEmail(request.Email) != null)
-            return new Result<UserResponse>(new EmailDuplicatedException());
+            return new Result<UserResponse>(ExceptionFactory.EmailDuplicatedException);
         
         _passwordHasher.CreatePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
 
