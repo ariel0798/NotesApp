@@ -18,8 +18,4 @@
       <ProjectReference Include="..\NotesApp.Infrastructure\NotesApp.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Common" />
-    </ItemGroup>
-
 </Project>

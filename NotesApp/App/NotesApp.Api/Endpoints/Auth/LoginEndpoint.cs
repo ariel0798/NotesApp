@@ -1,5 +1,6 @@
 using AutoMapper;
 using MediatR;
+using NotesApp.Api.Common;
 using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Authentication.Commands.Login;
 using NotesApp.ApplicationCore.Authentication.Models;

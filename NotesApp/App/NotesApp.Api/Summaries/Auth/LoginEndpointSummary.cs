@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NotesApp.Api.Common;
 using NotesApp.Api.Endpoints.Auth;
 using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Contracts.Authentication.Requests;

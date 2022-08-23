@@ -1,4 +1,4 @@
-namespace NotesApp.Api;
+namespace NotesApp.Api.Common;
 
 public static class ApiConstants
 {
