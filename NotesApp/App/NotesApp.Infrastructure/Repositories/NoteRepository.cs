@@ -19,13 +19,21 @@ public class NoteRepository :  GenericRepository<Note>, INoteRepository
         _tableNoteDetails = context.Set<NoteDetail>();
     }
 
+    public async Task<NoteDetail> AddNoteDetail(NoteDetail noteDetail)
+    {
+        await _tableNoteDetails.AddAsync(noteDetail);
+        return noteDetail;
+    }
+
+    public void UpdateNoteDetail(NoteDetail noteDetail)
+    {
+        _tableNoteDetails.Update(noteDetail);
+    }
+    
+
     public async Task<NoteDetail> GetNoteDetailByNoteDetailId(int noteDetailId)
     {
-        await using var connection = _databaseProvider.GetConnection();
-        
-        var query = "SELECT * FROM NoteDetail WHERE NoteDetailId = @noteDetailId";
-        
-        return  await connection.QueryFirstOrDefaultAsync<NoteDetail>(query, noteDetailId);
+        return  await GetNoteDetailById(noteDetailId);
     }
 
     public async Task<IEnumerable<NoteDetail>> GetAllNoteDetailsByUserId(int userId)
@@ -35,23 +43,29 @@ public class NoteRepository :  GenericRepository<Note>, INoteRepository
         var query = "SELECT * FROM NoteDetail as ND " +
                     "JOIN Note as N on N.NoteId = ND.NoteId " +
                     "JOIN [User] as U on U.UserId = N.UserId " +
-                    "WHERE U.UserId = @userId";
+                    "WHERE U.UserId = @UserId";
         
-        return await connection.QueryAsync<NoteDetail>(query, userId) ?? Enumerable.Empty<NoteDetail>();
+        return await connection.QueryAsync<NoteDetail>(query, new {UserId = userId}) ?? Enumerable.Empty<NoteDetail>();
     }
 
     public async Task<bool> DeleteNoteDetail(int noteDetailId)
     {
-        await using var connection = _databaseProvider.GetConnection();
-        
-        var query = "SELECT * FROM NoteDetail WHERE NoteDetailId = @noteDetailId";
-        
-        var noteDetail =  await connection.QueryFirstOrDefaultAsync<NoteDetail>(query, noteDetailId);
+        var noteDetail = await  GetNoteDetailById(noteDetailId);
 
         if (noteDetail == null) 
             return false;
         
         _tableNoteDetails.Remove(noteDetail);
+        
         return true;
+    }
+
+    private async Task<NoteDetail> GetNoteDetailById(int noteDetailId)
+    {
+        await using var connection = _databaseProvider.GetConnection();
+        
+        var query = "SELECT * FROM NoteDetail WHERE NoteDetailId = @NoteDetailId";
+        
+        return  await connection.QueryFirstOrDefaultAsync<NoteDetail>(query, new {NoteDetailId = noteDetailId});
     }
 }
