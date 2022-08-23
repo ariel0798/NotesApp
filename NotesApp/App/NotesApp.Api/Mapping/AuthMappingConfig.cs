@@ -1,4 +1,5 @@
 using AutoMapper;
+using NotesApp.ApplicationCore.Authentication.Commands.Login;
 using NotesApp.ApplicationCore.Authentication.Commands.Register;
 using NotesApp.ApplicationCore.Contracts.Authentication.Requests;
 
@@ -9,5 +10,6 @@ public class AuthMappingConfig : Profile
     public AuthMappingConfig()
     {
         CreateMap<RegisterRequest, RegisterCommand>();
+        CreateMap<LoginRequest, LoginCommand>();
     }
 }
