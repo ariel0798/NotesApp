@@ -5,7 +5,9 @@ using HashidsNet;
 using LanguageExt.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic;
+using NotesApp.ApplicationCore.Common.Models;
 using NotesApp.ApplicationCore.Contracts.Notes.Responses;
 using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
@@ -22,8 +24,9 @@ public class CreateNoteDetailCommandHandler : NoteBase, IRequestHandler<CreateNo
 
 
     public CreateNoteDetailCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, 
-        IValidator<CreateNoteDetailCommand> validator, IHashids hashids, IHttpContextAccessor httpContextAccessor) 
-        : base(httpContextAccessor, hashids)
+        IValidator<CreateNoteDetailCommand> validator, IHashids hashids, IHttpContextAccessor httpContextAccessor,
+        IOptions<HashIdSettings> hashIdOptions) 
+        : base(httpContextAccessor, hashids,hashIdOptions)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
