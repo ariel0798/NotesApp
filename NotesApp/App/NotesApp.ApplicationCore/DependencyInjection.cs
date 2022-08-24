@@ -19,7 +19,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection),ServiceLifetime.Transient);
 
         services.AddSingleton<IHashids>(_ => 
-            new Hashids(configuration.GetConnectionString("HashIdSalt")));
+            new Hashids(configuration.GetSection("HashIdSalt").Key,11));
         return services;
     }
 }
