@@ -29,7 +29,19 @@ public class NoteRepository :  GenericRepository<Note>, INoteRepository
     {
         _tableNoteDetails.Update(noteDetail);
     }
-    
+
+
+    public async Task<Note> GetNoteByUserId(int userId)
+    {
+        await using var connection = _databaseProvider.GetConnection();
+
+        var query = "SELECT * FROM Note as N " +
+                    "JOIN [User] as U on U.userId = N.UserId " +
+                    "WHERE U.UserId = @UserId";
+        
+        return await connection.QueryFirstOrDefaultAsync<Note>(query, new {UserId = userId});
+
+    }
 
     public async Task<NoteDetail> GetNoteDetailByNoteDetailId(int noteDetailId)
     {
