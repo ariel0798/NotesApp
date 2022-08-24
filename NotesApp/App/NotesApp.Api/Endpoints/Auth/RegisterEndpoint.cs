@@ -18,7 +18,8 @@ public class RegisterEndpoint : IEndpoint
 
                 var result = await mediator.Send(command, ct);
             
-                return result.ToOk();
+                return result.ToOk(StatusCodes.Status201Created, 
+                    ApiConstants.Authentication.EndpointNames.Login);
             }
         ).FindSummary<RegisterEndpoint>();
     }
