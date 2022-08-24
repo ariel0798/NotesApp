@@ -11,7 +11,7 @@ public class SwaggerRegistrar : IRegistrar
         
         builder.Services.AddSwaggerGen(options =>
         {
-            options.AddSecurityDefinition("Jwt", new OpenApiSecurityScheme
+            options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
             {
                 Description = "Standard Authorization header using the Bearer scheme (\"bearer token}\")",
                 In = ParameterLocation.Header,
