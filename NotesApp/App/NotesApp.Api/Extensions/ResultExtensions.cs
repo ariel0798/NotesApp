@@ -1,20 +1,22 @@
 using LanguageExt.Common;
 using NotesApp.Api.Common.ResultResponses.Failures.Factory;
+using NotesApp.Api.Common.ResultResponses.Success.Factory;
 
 namespace NotesApp.Api.Extensions;
 
 public static class ResultExtensions
 {
     public static IResult ToOk<TResult>(
-        this Result<TResult> result, bool isCreatedResource = false, string uri = "" )
+        this Result<TResult> result,  int statusCode = default(int), string url = "")
     {
         return result.Match<IResult>(obj 
                 =>
             {
-                if (isCreatedResource)
-                    return Results.Created(uri, obj);
-                else
-                    return Results.Ok(obj);
+                var successResultFactory = new SuccessResultFactory(url);
+
+                var successResult = successResultFactory.GetSuccessResultByStatusCode(statusCode);
+
+                return successResult.GetSuccessResult(obj);
             }, 
             exception =>
             {
