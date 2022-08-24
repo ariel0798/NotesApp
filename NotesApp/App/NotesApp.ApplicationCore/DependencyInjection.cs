@@ -20,6 +20,9 @@ public static class DependencyInjection
 
         services.AddSingleton<IHashids>(_ => 
             new Hashids(configuration.GetSection("HashIdSalt").Key,11));
+        
+        services.AddHttpContextAccessor();
+
         return services;
     }
 }
