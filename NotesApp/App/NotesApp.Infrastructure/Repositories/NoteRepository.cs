@@ -43,9 +43,9 @@ public class NoteRepository :  GenericRepository<Note>, INoteRepository
 
     }
 
-    public async Task<NoteDetail> GetNoteDetailByNoteDetailId(int noteDetailId)
+    public async Task<NoteDetail> GetNoteDetailByNoteDetailIdAndUserId(int noteDetailId, int userId)
     {
-        return  await GetNoteDetailById(noteDetailId);
+        return  await GetNoteDetailByIdAndUserId(noteDetailId, userId);
     }
 
     public async Task<IEnumerable<NoteDetail>> GetAllNoteDetailsByUserId(int userId)
@@ -60,9 +60,9 @@ public class NoteRepository :  GenericRepository<Note>, INoteRepository
         return await connection.QueryAsync<NoteDetail>(query, new {UserId = userId}) ?? Enumerable.Empty<NoteDetail>();
     }
 
-    public async Task<bool> DeleteNoteDetail(int noteDetailId)
+    public async Task<bool> DeleteNoteDetail(int noteDetailId, int userId)
     {
-        var noteDetail = await  GetNoteDetailById(noteDetailId);
+        var noteDetail = await  GetNoteDetailByIdAndUserId(noteDetailId, userId);
 
         if (noteDetail == null) 
             return false;
@@ -72,12 +72,15 @@ public class NoteRepository :  GenericRepository<Note>, INoteRepository
         return true;
     }
 
-    private async Task<NoteDetail> GetNoteDetailById(int noteDetailId)
+    private async Task<NoteDetail> GetNoteDetailByIdAndUserId(int noteDetailId, int userId)
     {
         await using var connection = _databaseProvider.GetConnection();
         
-        var query = "SELECT * FROM NoteDetail WHERE NoteDetailId = @NoteDetailId";
+        var query = "SELECT * FROM NoteDetail as ND " +
+                            "JOIN Note as N on N.NoteId = ND.NoteId " +
+                            "JOIN [User] as U on U.userId = N.UserId " +
+                            "WHERE NoteDetailId = @NoteDetailId and U.UserId = @UserId";
         
-        return  await connection.QueryFirstOrDefaultAsync<NoteDetail>(query, new {NoteDetailId = noteDetailId});
+        return  await connection.QueryFirstOrDefaultAsync<NoteDetail>(query, new {UserId = userId, NoteDetailId = noteDetailId});
     }
 }
