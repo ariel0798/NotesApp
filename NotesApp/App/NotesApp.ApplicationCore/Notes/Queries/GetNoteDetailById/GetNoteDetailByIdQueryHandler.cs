@@ -40,7 +40,7 @@ public class GetNoteDetailByIdQueryHandler : NoteBase, IRequestHandler<GetNoteDe
         var userId = GetUserIdByHttpContext();
 
         if (userId == null)
-            return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
+            return new Result<NoteDetailResponse>(ExceptionFactory.InvalidCredentialException);
         
         var noteDetail = await _unitOfWork.Notes.GetNoteDetailByNoteDetailIdAndUserId(unHashId, userId.Value);
         

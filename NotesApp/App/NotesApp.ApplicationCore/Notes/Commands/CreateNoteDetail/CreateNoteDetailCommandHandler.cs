@@ -41,8 +41,13 @@ public class CreateNoteDetailCommandHandler : NoteBase, IRequestHandler<CreateNo
         if (!validationResult.IsValid)
             return new Result<NoteDetailResponse>(new ValidationException(validationResult.Errors));
 
+        var userId = GetUserIdByHttpContext();
 
-        var note = await GetNoteId();
+        if (userId == null)
+            return new Result<NoteDetailResponse>(ExceptionFactory.InvalidCredentialException);
+        
+        var note = await _unitOfWork.Notes.GetNoteByUserId(userId.Value);
+        
         if (note == null)
             return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
 
