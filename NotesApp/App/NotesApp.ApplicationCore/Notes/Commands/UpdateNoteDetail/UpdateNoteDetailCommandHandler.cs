@@ -59,6 +59,7 @@ public class UpdateNoteDetailCommandHandler : NoteBase, IRequestHandler<UpdateNo
     {
         noteDetail.Title = request.Title;
         noteDetail.Description = request.Description;
+        noteDetail.LastEdited = DateTime.Now;
         
         _unitOfWork.Notes.UpdateNoteDetail(noteDetail);
         await _unitOfWork.Save();
