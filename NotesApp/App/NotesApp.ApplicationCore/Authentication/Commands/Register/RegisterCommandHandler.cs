@@ -35,12 +35,15 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand,Result<Use
         if (!validationResult.IsValid)
             return new Result<UserResponse>(new ValidationException(validationResult.Errors));
 
-        if (await GetUserByEmail(request.Email) != null)
+        var email = request.Email.ToLower();
+        
+        if (await GetUserByEmail(email) != null)
             return new Result<UserResponse>(ExceptionFactory.EmailDuplicatedException);
         
         _passwordHasher.CreatePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
 
         var user = _mapper.Map<User>(request);
+        user.Email = email;
         user.PasswordHash = passwordHash;
         user.PasswordSalt = passwordSalt;
 

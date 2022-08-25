@@ -26,7 +26,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand,Result<JwtToken>
     }
     public async Task<Result<JwtToken>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var user = await GetUserByEmail(request.Email);
+        var user = await GetUserByEmail(request.Email.ToLower());
         
         if (user == null)
             return new Result<JwtToken>(ExceptionFactory.InvalidCredentialException);
