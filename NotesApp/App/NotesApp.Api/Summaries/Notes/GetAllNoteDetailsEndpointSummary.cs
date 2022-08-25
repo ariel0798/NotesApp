@@ -10,7 +10,7 @@ public class GetAllNoteDetailsEndpointSummary : ISummary<GetAllNoteDetailsEndpoi
     public static RouteHandlerBuilder SetSummary(RouteHandlerBuilder builder)
     {
         return builder
-            .Response<IEnumerable<NoteDetailResponse>>(StatusCodes.Status200OK, "Return all notes")
+            .Response<IEnumerable<NoteDetailResponse>>(StatusCodes.Status200OK, "Returns all notes")
             .Summary("Get All Note detail of user", "Get All Note detail of user")
             .WithTags(ApiConstants.Notes.Tag);
     }
