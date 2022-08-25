@@ -1,11 +1,10 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using NotesApp.Api.Common;
 using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Notes.Queries.GetNoteDetailById;
 
-namespace NotesApp.Api.Endpoints.Notes;
+namespace NotesApp.Api.Endpoints.Notes.Gets;
 
 public class GetNoteDetailByIdEndpoint : IEndpoint
 {

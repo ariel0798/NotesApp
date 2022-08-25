@@ -1,9 +1,9 @@
 using NotesApp.Api.Common;
-using NotesApp.Api.Endpoints.Notes;
+using NotesApp.Api.Endpoints.Notes.Gets;
 using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Contracts.Notes.Responses;
 
-namespace NotesApp.Api.Summaries.Notes;
+namespace NotesApp.Api.Summaries.Notes.Gets;
 
 public class GetAllNoteDetailsTrashEndpointSummary : ISummary<GetAllNoteDetailsTrashEndpoint>
 {

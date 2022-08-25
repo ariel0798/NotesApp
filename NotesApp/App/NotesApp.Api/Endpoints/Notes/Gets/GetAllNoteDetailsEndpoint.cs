@@ -4,7 +4,7 @@ using NotesApp.Api.Common;
 using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Notes.Queries.GetAllNoteDetails;
 
-namespace NotesApp.Api.Endpoints.Notes;
+namespace NotesApp.Api.Endpoints.Notes.Gets;
 
 public class GetAllNoteDetailsEndpoint : IEndpoint
 {
