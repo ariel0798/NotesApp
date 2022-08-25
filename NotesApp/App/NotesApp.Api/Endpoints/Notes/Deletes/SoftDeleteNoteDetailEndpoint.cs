@@ -4,7 +4,7 @@ using NotesApp.Api.Common;
 using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Notes.Commands.SoftDeleteNoteDetail;
 
-namespace NotesApp.Api.Endpoints.Notes;
+namespace NotesApp.Api.Endpoints.Notes.Deletes;
 
 public class SoftDeleteNoteDetailEndpoint : IEndpoint
 {
