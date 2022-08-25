@@ -11,7 +11,7 @@ public class GetAllNoteDetailsEndpointSummary : ISummary<GetAllNoteDetailsEndpoi
     {
         return builder
             .Response<IEnumerable<NoteDetailResponse>>(StatusCodes.Status200OK, "Returns all notes")
-            .Summary("Get All Note detail of user", "Get All Note detail of user")
+            .Summary("Returns all notes of a User", "Returns all notes of a User")
             .WithTags(ApiConstants.Notes.Tag);
     }
 }

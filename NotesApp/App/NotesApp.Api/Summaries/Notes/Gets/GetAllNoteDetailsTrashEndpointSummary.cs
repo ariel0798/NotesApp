@@ -11,7 +11,7 @@ public class GetAllNoteDetailsTrashEndpointSummary : ISummary<GetAllNoteDetailsT
     {
         return builder
             .Response<IEnumerable<NoteDetailResponse>>(StatusCodes.Status200OK, "Returns all notes in trash")
-            .Summary("Get All Note detail in trash of user", "Get All Note detail in trash of user")
+            .Summary("Returns all notes in trash of a User", "Returns all notes in trash of a User")
             .WithTags(ApiConstants.Notes.Tag);
     }
 }

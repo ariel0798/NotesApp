@@ -15,7 +15,7 @@ public class UpdateNoteDetailEndpointSummary : ISummary<UpdateNoteDetailEndpoint
             .Accepts<UpdateNoteDetailRequest>(ApiConstants.ContentType)
             .Response<NoteDetailResponse>(StatusCodes.Status200OK, "Note updated")
             .Response<ValidationResponse>(StatusCodes.Status400BadRequest, "Validation failed")
-            .Summary("Updates note by id provided", "Updates note by id provided")
+            .Summary("Updates a single note", "Updates a single note")
             .WithTags(ApiConstants.Notes.Tag);
     }
 }

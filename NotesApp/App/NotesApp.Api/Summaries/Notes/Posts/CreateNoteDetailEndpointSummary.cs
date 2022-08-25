@@ -15,7 +15,7 @@ public class CreateNoteDetailEndpointSummary : ISummary<CreateNoteDetailEndpoint
             .Accepts<CreateNoteDetailRequest>(ApiConstants.ContentType)
             .Response<NoteDetailResponse>(StatusCodes.Status201Created, "Note created")
             .Response<ValidationResponse>(StatusCodes.Status400BadRequest, "Validation failed")
-            .Summary("Add note", "Add note")
+            .Summary("Creates a note", "Creates a note")
             .WithTags(ApiConstants.Notes.Tag);
     }
 }

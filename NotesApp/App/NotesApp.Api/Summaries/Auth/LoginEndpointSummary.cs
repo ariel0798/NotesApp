@@ -13,7 +13,7 @@ public class LoginEndpointSummary : ISummary<LoginEndpoint>
     {
         return builder
             .Accepts<LoginRequest>(ApiConstants.ContentType)
-            .Response<string>(StatusCodes.Status200OK,"Jwt generated")
+            .Response<string>(StatusCodes.Status200OK,"Returns Jwt")
             .Response<ProblemResponse>(StatusCodes.Status409Conflict, "Authentication failed")
             .Summary("Login user", "Login user returns Jwt")
             .WithTags(ApiConstants.Authentication.Tag);
