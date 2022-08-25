@@ -28,7 +28,7 @@ public class GetNoteDetailByIdQueryHandler : NoteBase, IRequestHandler<GetNoteDe
     }
     public  async Task<Result<NoteDetailResponse>> Handle(GetNoteDetailByIdQuery request, CancellationToken cancellationToken)
     {
-        if(IsIdRightLenght(request.NoteDetailId))
+        if(!IsIdRightLenght(request.NoteDetailId))
             return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
 
         var hashId = _hashids.Decode(request.NoteDetailId);
