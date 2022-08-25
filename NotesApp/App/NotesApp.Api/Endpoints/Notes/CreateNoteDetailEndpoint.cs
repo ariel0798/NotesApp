@@ -19,8 +19,14 @@ public class CreateNoteDetailEndpoint : IEndpoint
         {
             var command = mapper.Map<CreateNoteDetailCommand>(createNoteDetailRequest);
             var result = await mediator.Send(command, ct);
+
+            var url = ApiConstants.Notes.EndpointNames.NoteDetailId;
+
+            if (result.IsSuccess)
+                url = ApiConstants.Notes.BaseRoute + $"/{result.Map(x => x.NoteDetailId)}";
+            
             return result.ToOk(StatusCodes.Status201Created, 
-                ApiConstants.Notes.EndpointNames.NoteDetailId);
+                url);
             
         }).FindSummary<CreateNoteDetailEndpoint>();
     }
