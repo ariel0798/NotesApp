@@ -6,7 +6,7 @@ using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Contracts.Notes.Requests;
 using NotesApp.ApplicationCore.Notes.Commands.CreateNoteDetail;
 
-namespace NotesApp.Api.Endpoints.Notes;
+namespace NotesApp.Api.Endpoints.Notes.Posts;
 
 public class CreateNoteDetailEndpoint : IEndpoint
 {
