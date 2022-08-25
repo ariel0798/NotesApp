@@ -36,15 +36,12 @@ public class CreateNoteDetailCommandHandler : NoteBase, IRequestHandler<CreateNo
 
     public async Task<Result<NoteDetailResponse>> Handle(CreateNoteDetailCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request,cancellationToken);
-
-        if (!validationResult.IsValid)
-            return new Result<NoteDetailResponse>(new ValidationException(validationResult.Errors));
-
         var userId = GetUserIdByHttpContext();
+        
+        var exceptionResponse = ValidateRequest(request, userId);
 
-        if (userId == null)
-            return new Result<NoteDetailResponse>(ExceptionFactory.InvalidCredentialException);
+        if (exceptionResponse.HasValue)
+            return exceptionResponse.Value;
         
         var note = await _unitOfWork.Notes.GetNoteByUserId(userId.Value);
         
@@ -64,6 +61,18 @@ public class CreateNoteDetailCommandHandler : NoteBase, IRequestHandler<CreateNo
         return noteDetailDto;
     }
 
+    private Result<NoteDetailResponse>? ValidateRequest(CreateNoteDetailCommand request, int? userId)
+    {
+        var validationResult =  _validator.Validate(request);
+
+        if (!validationResult.IsValid)
+            return new Result<NoteDetailResponse>(new ValidationException(validationResult.Errors));
+
+        if (userId == null)
+            return new Result<NoteDetailResponse>(ExceptionFactory.InvalidCredentialException);
+
+        return null;
+    }
     private async Task<Note?> GetNoteId()
     {
         var userId = GetUserIdByHttpContext();

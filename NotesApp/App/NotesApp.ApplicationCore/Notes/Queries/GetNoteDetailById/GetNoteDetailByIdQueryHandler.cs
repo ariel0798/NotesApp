@@ -28,20 +28,15 @@ public class GetNoteDetailByIdQueryHandler : NoteBase, IRequestHandler<GetNoteDe
     }
     public  async Task<Result<NoteDetailResponse>> Handle(GetNoteDetailByIdQuery request, CancellationToken cancellationToken)
     {
-        if(!IsIdRightLenght(request.NoteDetailId))
-            return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
-
-        var hashId = _hashids.Decode(request.NoteDetailId);
-
-        if (hashId.Length == 0)
-            return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
-        
-        var unHashId = hashId[0];
         var userId = GetUserIdByHttpContext();
 
-        if (userId == null)
-            return new Result<NoteDetailResponse>(ExceptionFactory.InvalidCredentialException);
-        
+        var exceptionResponse = ValidateRequest(request, userId);
+
+        if (exceptionResponse.HasValue)
+            return exceptionResponse.Value;
+
+        var unHashId = _hashids.Decode(request.NoteDetailId)[0];
+            
         var noteDetail = await _unitOfWork.Notes.GetNoteDetailByNoteDetailIdAndUserId(unHashId, userId.Value);
         
         if (noteDetail == null)
@@ -52,4 +47,23 @@ public class GetNoteDetailByIdQueryHandler : NoteBase, IRequestHandler<GetNoteDe
         
         return noteDetailDto;
     }
+
+    private Result<NoteDetailResponse>? ValidateRequest(GetNoteDetailByIdQuery request, int? userId)
+    {
+        if(!IsIdRightLenght(request.NoteDetailId))
+            return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
+
+        var hashId = _hashids.Decode(request.NoteDetailId);
+
+        if (!HasHashIdValue(hashId))
+            return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
+
+        if (userId == null)
+            return new Result<NoteDetailResponse>(ExceptionFactory.InvalidCredentialException);
+
+        return null;
+    }
+    
+    private bool HasHashIdValue(int[]? hashId) => hashId.Length > 0;
+
 }
