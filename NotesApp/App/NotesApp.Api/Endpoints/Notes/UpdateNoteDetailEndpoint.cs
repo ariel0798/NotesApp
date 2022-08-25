@@ -12,7 +12,7 @@ public class UpdateNoteDetailEndpoint : IEndpoint
 {
     public static void DefineEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut(ApiConstants.Notes.BaseRoute + "2",
+        app.MapPut(ApiConstants.Notes.BaseRoute,
                 [Authorize] 
                 async (UpdateNoteDetailRequest updateNoteDetailRequest, ISender mediator, IMapper mapper, CancellationToken ct) =>
                 {
