@@ -1,8 +1,8 @@
 using NotesApp.Api.Common;
-using NotesApp.Api.Endpoints.Notes;
+using NotesApp.Api.Endpoints.Notes.Puts;
 using NotesApp.Api.Extensions;
 
-namespace NotesApp.Api.Summaries.Notes;
+namespace NotesApp.Api.Summaries.Notes.Puts;
 
 public class RecoverNoteDetailEndpointSummary : ISummary<RecoverNoteDetailEndpoint>
 {

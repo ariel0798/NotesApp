@@ -1,11 +1,11 @@
 using NotesApp.Api.Common;
-using NotesApp.Api.Endpoints.Notes;
+using NotesApp.Api.Endpoints.Notes.Puts;
 using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Contracts.ErrorResponses;
 using NotesApp.ApplicationCore.Contracts.Notes.Responses;
 using NotesApp.ApplicationCore.Contracts.User.Requests;
 
-namespace NotesApp.Api.Summaries.Notes;
+namespace NotesApp.Api.Summaries.Notes.Puts;
 
 public class UpdateNoteDetailEndpointSummary : ISummary<UpdateNoteDetailEndpoint>
 {

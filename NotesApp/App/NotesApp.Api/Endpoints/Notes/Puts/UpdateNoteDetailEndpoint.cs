@@ -6,7 +6,7 @@ using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Contracts.User.Requests;
 using NotesApp.ApplicationCore.Notes.Commands.UpdateNoteDetail;
 
-namespace NotesApp.Api.Endpoints.Notes;
+namespace NotesApp.Api.Endpoints.Notes.Puts;
 
 public class UpdateNoteDetailEndpoint : IEndpoint
 {
