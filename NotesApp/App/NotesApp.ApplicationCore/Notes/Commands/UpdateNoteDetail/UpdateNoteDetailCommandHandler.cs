@@ -5,6 +5,7 @@ using LanguageExt.Common;
 using MediatR;
 using NotesApp.ApplicationCore.Contracts.Notes.Responses;
 using NotesApp.ApplicationCore.Services.AuthService;
+using NotesApp.ApplicationCore.Services.NoteService;
 using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 using NotesApp.Domain.Models;
@@ -18,15 +19,17 @@ public class UpdateNoteDetailCommandHandler :  IRequestHandler<UpdateNoteDetailC
     private readonly IHashids _hashids;
     private readonly IValidator<UpdateNoteDetailCommand> _validator;
     private readonly IAuthService _authService;
+    private readonly INoteService _noteService;
 
     
     public UpdateNoteDetailCommandHandler(IHashids hashids, IUnitOfWork unitOfWork, IMapper mapper, 
-        IValidator<UpdateNoteDetailCommand> validator, IAuthService authService)
+        IValidator<UpdateNoteDetailCommand> validator, IAuthService authService, INoteService noteService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _validator = validator;
         _authService = authService;
+        _noteService = noteService;
         _hashids = hashids;
     }
 
@@ -68,24 +71,12 @@ public class UpdateNoteDetailCommandHandler :  IRequestHandler<UpdateNoteDetailC
     }
     private Result<NoteDetailResponse>? ValidateRequest(UpdateNoteDetailCommand request, int? userId)
     {
-        if (userId == null)
-            return new Result<NoteDetailResponse>(ExceptionFactory.InvalidCredentialException);
-        
-        if(!_authService.IsIdRightLenght(request.NoteDetailId))
-            return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
-        
-        var hashId = _hashids.Decode(request.NoteDetailId);
-        
-        if (!HasHashIdValue(hashId))
-            return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
-
         var validation = _validator.Validate(request);
         
         if (!validation.IsValid)
             return new Result<NoteDetailResponse>(new ValidationException(validation.Errors));
-        
-        return null;
+
+        return _noteService.ValidateUserIdAndNoteDetailId<NoteDetailResponse>(userId, request.NoteDetailId);
     }
 
-    private bool HasHashIdValue(int[]? hashId) => hashId.Length > 0;
 }

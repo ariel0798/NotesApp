@@ -2,6 +2,7 @@ using HashidsNet;
 using LanguageExt.Common;
 using MediatR;
 using NotesApp.ApplicationCore.Services.AuthService;
+using NotesApp.ApplicationCore.Services.NoteService;
 using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 using NotesApp.Domain.Models;
@@ -13,11 +14,13 @@ public class RecoverNoteDetailCommandHandler :  IRequestHandler<RecoverNoteDetai
     private readonly IUnitOfWork _unitOfWork;
     private readonly IHashids _hashids;
     private readonly IAuthService _authService;
+    private readonly INoteService _noteService;
     
-    public RecoverNoteDetailCommandHandler(IHashids hashids, IUnitOfWork unitOfWork, IAuthService authService)
+    public RecoverNoteDetailCommandHandler(IHashids hashids, IUnitOfWork unitOfWork, IAuthService authService, INoteService noteService)
     {
         _unitOfWork = unitOfWork;
         _authService = authService;
+        _noteService = noteService;
         _hashids = hashids;
     }
 
@@ -25,7 +28,7 @@ public class RecoverNoteDetailCommandHandler :  IRequestHandler<RecoverNoteDetai
     {
         var userId = _authService.GetUserIdByHttpContext();
 
-        var exceptionResponse = ValidateRequest(request, userId);
+        var exceptionResponse = _noteService.ValidateUserIdAndNoteDetailId<bool>(userId,request.NoteDetailId);
 
         if (exceptionResponse.HasValue)
             return exceptionResponse.Value;
@@ -52,21 +55,4 @@ public class RecoverNoteDetailCommandHandler :  IRequestHandler<RecoverNoteDetai
 
         await _unitOfWork.Save();
     }
-    private Result<bool>? ValidateRequest(RecoverNoteDetailCommand request, int? userId)
-    {
-        if (userId == null)
-            return new Result<bool>(ExceptionFactory.InvalidCredentialException);
-        
-        if(!_authService.IsIdRightLenght(request.NoteDetailId))
-            return new Result<bool>(ExceptionFactory.NoteNotFoundException);
-
-        var hashId = _hashids.Decode(request.NoteDetailId);
-
-        if (!HasHashIdValue(hashId))
-            return new Result<bool>(ExceptionFactory.NoteNotFoundException);
-        
-        return null;
-    }
-    
-    private bool HasHashIdValue(int[]? hashId) => hashId.Length > 0;
 }

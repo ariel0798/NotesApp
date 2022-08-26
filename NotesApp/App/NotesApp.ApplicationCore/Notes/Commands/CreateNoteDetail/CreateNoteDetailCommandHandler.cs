@@ -64,9 +64,6 @@ public class CreateNoteDetailCommandHandler :  IRequestHandler<CreateNoteDetailC
         if (!validationResult.IsValid)
             return new Result<NoteDetailResponse>(new ValidationException(validationResult.Errors));
 
-        if (userId == null)
-            return new Result<NoteDetailResponse>(ExceptionFactory.InvalidCredentialException);
-
-        return null;
+        return _authService.ValidateUserId<NoteDetailResponse>(userId);
     }
 }

@@ -4,6 +4,7 @@ using LanguageExt.Common;
 using MediatR;
 using NotesApp.ApplicationCore.Contracts.Notes.Responses;
 using NotesApp.ApplicationCore.Services.AuthService;
+using NotesApp.ApplicationCore.Services.NoteService;
 using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 
@@ -15,13 +16,14 @@ public class GetNoteDetailByIdQueryHandler :  IRequestHandler<GetNoteDetailByIdQ
     private readonly IMapper _mapper;
     private readonly IHashids _hashids;
     private readonly IAuthService _authService;
-
+    private readonly INoteService _noteService;
     
     public GetNoteDetailByIdQueryHandler(IAuthService authService, IHashids hashids,
-        IUnitOfWork unitOfWork, IMapper mapper) 
+        IUnitOfWork unitOfWork, IMapper mapper, INoteService noteService) 
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _noteService = noteService;
         _authService = authService;
         _hashids = hashids;
     }
@@ -29,7 +31,7 @@ public class GetNoteDetailByIdQueryHandler :  IRequestHandler<GetNoteDetailByIdQ
     {
         var userId = _authService.GetUserIdByHttpContext();
 
-        var exceptionResponse = ValidateRequest(request, userId);
+        var exceptionResponse = _noteService.ValidateUserIdAndNoteDetailId<NoteDetailResponse>(userId,request.NoteDetailId);
 
         if (exceptionResponse.HasValue)
             return exceptionResponse.Value;
@@ -46,23 +48,4 @@ public class GetNoteDetailByIdQueryHandler :  IRequestHandler<GetNoteDetailByIdQ
         
         return noteDetailDto;
     }
-
-    private Result<NoteDetailResponse>? ValidateRequest(GetNoteDetailByIdQuery request, int? userId)
-    {
-        if(!_authService.IsIdRightLenght(request.NoteDetailId))
-            return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
-
-        var hashId = _hashids.Decode(request.NoteDetailId);
-
-        if (!HasHashIdValue(hashId))
-            return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
-
-        if (userId == null)
-            return new Result<NoteDetailResponse>(ExceptionFactory.InvalidCredentialException);
-
-        return null;
-    }
-    
-    private bool HasHashIdValue(int[]? hashId) => hashId.Length > 0;
-
 }
