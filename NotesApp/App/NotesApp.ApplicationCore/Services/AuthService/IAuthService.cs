@@ -8,4 +8,7 @@ public interface IAuthService
 {
     Task<JwtToken> SetTokenAndRefreshToken(User user);
     void SetRefreshToken(JwtToken refreshToken, HttpContext context);
+
+    int? GetUserIdByHttpContext();
+    bool IsIdRightLenght(string id);
 }
