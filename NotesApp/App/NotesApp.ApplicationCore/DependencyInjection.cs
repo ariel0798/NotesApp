@@ -4,6 +4,8 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NotesApp.ApplicationCore.Common.Models;
+using NotesApp.ApplicationCore.Services;
+
 namespace NotesApp.ApplicationCore;
 
 public static class DependencyInjection
@@ -22,6 +24,7 @@ public static class DependencyInjection
 
         services.AddHttpContextAccessor();
 
+        services.AddHostedService<BackgroundTasksService>();
         return services;
     }
 
