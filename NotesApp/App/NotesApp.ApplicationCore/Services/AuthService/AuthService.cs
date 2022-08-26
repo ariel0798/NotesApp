@@ -1,10 +1,12 @@
 using System.Security.Claims;
 using HashidsNet;
+using LanguageExt.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
 using NotesApp.ApplicationCore.Authentication.Models;
 using NotesApp.ApplicationCore.Common.Models;
+using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 using NotesApp.Domain.Models;
 
@@ -70,5 +72,13 @@ public class AuthService : IAuthService
     public bool IsIdRightLenght(string id)
     {
         return id.Length >= _hashIdSettings.MinimumHashIdLenght;
+    }
+
+    public Result<T>? ValidateUserId<T>(int? userId)
+    {
+        if (userId == null)
+            return new Result<T>(ExceptionFactory.InvalidCredentialException);
+
+        return null;
     }
 }

@@ -1,3 +1,4 @@
+using LanguageExt.Common;
 using Microsoft.AspNetCore.Http;
 using NotesApp.ApplicationCore.Authentication.Models;
 using NotesApp.Domain.Models;
@@ -11,4 +12,5 @@ public interface IAuthService
 
     int? GetUserIdByHttpContext();
     bool IsIdRightLenght(string id);
+    Result<T>? ValidateUserId<T>(int? userId);
 }
