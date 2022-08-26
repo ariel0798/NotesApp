@@ -2,32 +2,32 @@ using AutoMapper;
 using HashidsNet;
 using LanguageExt.Common;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using NotesApp.ApplicationCore.Common.Models;
 using NotesApp.ApplicationCore.Contracts.Notes.Responses;
+using NotesApp.ApplicationCore.Services.AuthService;
 using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 
 namespace NotesApp.ApplicationCore.Notes.Queries.GetAllNoteDetailsTrash;
 
-public class GetAllNoteDetailsTrashQueryHandler : NoteBase,  IRequestHandler<GetAllNoteDetailsTrashQuery, Result<IEnumerable<NoteDetailResponse>>>
+public class GetAllNoteDetailsTrashQueryHandler :  IRequestHandler<GetAllNoteDetailsTrashQuery, Result<IEnumerable<NoteDetailResponse>>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IHashids _hashids;
+    private readonly IAuthService _authService;
+
     
-    public GetAllNoteDetailsTrashQueryHandler(IHttpContextAccessor httpContextAccessor, IHashids hashids,
-        IOptions<HashIdSettings> hashSettings, IUnitOfWork unitOfWork, IMapper mapper) 
-        : base(httpContextAccessor, hashids, hashSettings)
+    public GetAllNoteDetailsTrashQueryHandler( IHashids hashids, IUnitOfWork unitOfWork, 
+        IMapper mapper, IAuthService authService) 
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _authService = authService;
         _hashids = hashids;
     }
     public async Task<Result<IEnumerable<NoteDetailResponse>>> Handle(GetAllNoteDetailsTrashQuery request, CancellationToken cancellationToken)
     {
-        var userId = GetUserIdByHttpContext();
+        var userId = _authService.GetUserIdByHttpContext();
 
         if (userId == null)
             return new Result<IEnumerable<NoteDetailResponse>>(ExceptionFactory.InvalidCredentialException);
@@ -46,6 +46,4 @@ public class GetAllNoteDetailsTrashQueryHandler : NoteBase,  IRequestHandler<Get
         
         return noteDetailResponses;
     }
-
-
 }

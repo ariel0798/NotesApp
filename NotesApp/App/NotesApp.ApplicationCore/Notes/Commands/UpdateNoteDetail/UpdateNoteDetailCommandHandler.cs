@@ -3,36 +3,36 @@ using FluentValidation;
 using HashidsNet;
 using LanguageExt.Common;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using NotesApp.ApplicationCore.Common.Models;
 using NotesApp.ApplicationCore.Contracts.Notes.Responses;
+using NotesApp.ApplicationCore.Services.AuthService;
 using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 using NotesApp.Domain.Models;
 
 namespace NotesApp.ApplicationCore.Notes.Commands.UpdateNoteDetail;
 
-public class UpdateNoteDetailCommandHandler : NoteBase, IRequestHandler<UpdateNoteDetailCommand, Result<NoteDetailResponse>>
+public class UpdateNoteDetailCommandHandler :  IRequestHandler<UpdateNoteDetailCommand, Result<NoteDetailResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IHashids _hashids;
     private readonly IValidator<UpdateNoteDetailCommand> _validator;
+    private readonly IAuthService _authService;
+
     
-    public UpdateNoteDetailCommandHandler(IHttpContextAccessor httpContextAccessor, IHashids hashids, 
-        IOptions<HashIdSettings> hashSettings, IUnitOfWork unitOfWork, IMapper mapper, IValidator<UpdateNoteDetailCommand> validator) 
-        : base(httpContextAccessor, hashids, hashSettings)
+    public UpdateNoteDetailCommandHandler(IHashids hashids, IUnitOfWork unitOfWork, IMapper mapper, 
+        IValidator<UpdateNoteDetailCommand> validator, IAuthService authService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _validator = validator;
+        _authService = authService;
         _hashids = hashids;
     }
 
     public async Task<Result<NoteDetailResponse>> Handle(UpdateNoteDetailCommand request, CancellationToken cancellationToken)
     {
-        var userId = GetUserIdByHttpContext();
+        var userId = _authService.GetUserIdByHttpContext();
 
         var exceptionResponse = ValidateRequest(request, userId);
 
@@ -71,7 +71,7 @@ public class UpdateNoteDetailCommandHandler : NoteBase, IRequestHandler<UpdateNo
         if (userId == null)
             return new Result<NoteDetailResponse>(ExceptionFactory.InvalidCredentialException);
         
-        if(!IsIdRightLenght(request.NoteDetailId))
+        if(!_authService.IsIdRightLenght(request.NoteDetailId))
             return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
         
         var hashId = _hashids.Decode(request.NoteDetailId);

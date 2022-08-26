@@ -2,33 +2,32 @@ using AutoMapper;
 using HashidsNet;
 using LanguageExt.Common;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using NotesApp.ApplicationCore.Common.Models;
 using NotesApp.ApplicationCore.Contracts.Notes.Responses;
+using NotesApp.ApplicationCore.Services.AuthService;
 using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 
 namespace NotesApp.ApplicationCore.Notes.Queries.GetNoteDetailById;
 
-public class GetNoteDetailByIdQueryHandler : NoteBase, IRequestHandler<GetNoteDetailByIdQuery, Result<NoteDetailResponse>>
+public class GetNoteDetailByIdQueryHandler :  IRequestHandler<GetNoteDetailByIdQuery, Result<NoteDetailResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IHashids _hashids;
+    private readonly IAuthService _authService;
+
     
-    public GetNoteDetailByIdQueryHandler(IHttpContextAccessor httpContextAccessor, IHashids hashids, 
-        IOptions<HashIdSettings> hashIdOptionsSettings,
+    public GetNoteDetailByIdQueryHandler(IAuthService authService, IHashids hashids,
         IUnitOfWork unitOfWork, IMapper mapper) 
-        : base(httpContextAccessor, hashids, hashIdOptionsSettings)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _authService = authService;
         _hashids = hashids;
     }
     public  async Task<Result<NoteDetailResponse>> Handle(GetNoteDetailByIdQuery request, CancellationToken cancellationToken)
     {
-        var userId = GetUserIdByHttpContext();
+        var userId = _authService.GetUserIdByHttpContext();
 
         var exceptionResponse = ValidateRequest(request, userId);
 
@@ -50,7 +49,7 @@ public class GetNoteDetailByIdQueryHandler : NoteBase, IRequestHandler<GetNoteDe
 
     private Result<NoteDetailResponse>? ValidateRequest(GetNoteDetailByIdQuery request, int? userId)
     {
-        if(!IsIdRightLenght(request.NoteDetailId))
+        if(!_authService.IsIdRightLenght(request.NoteDetailId))
             return new Result<NoteDetailResponse>(ExceptionFactory.NoteNotFoundException);
 
         var hashId = _hashids.Decode(request.NoteDetailId);

@@ -1,31 +1,29 @@
 using HashidsNet;
 using LanguageExt.Common;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using NotesApp.ApplicationCore.Common.Models;
+using NotesApp.ApplicationCore.Services.AuthService;
 using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 using NotesApp.Domain.Models;
 
 namespace NotesApp.ApplicationCore.Notes.Commands.RecoverNoteDetail;
 
-public class RecoverNoteDetailCommandHandler : NoteBase, IRequestHandler<RecoverNoteDetailCommand,Result<bool>>
+public class RecoverNoteDetailCommandHandler :  IRequestHandler<RecoverNoteDetailCommand,Result<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IHashids _hashids;
+    private readonly IAuthService _authService;
     
-    public RecoverNoteDetailCommandHandler(IHttpContextAccessor httpContextAccessor, IHashids hashids, 
-        IOptions<HashIdSettings> hashSettings, IUnitOfWork unitOfWork) 
-        : base(httpContextAccessor, hashids, hashSettings)
+    public RecoverNoteDetailCommandHandler(IHashids hashids, IUnitOfWork unitOfWork, IAuthService authService)
     {
         _unitOfWork = unitOfWork;
+        _authService = authService;
         _hashids = hashids;
     }
 
     public async Task<Result<bool>> Handle(RecoverNoteDetailCommand request, CancellationToken cancellationToken)
     {
-        var userId = GetUserIdByHttpContext();
+        var userId = _authService.GetUserIdByHttpContext();
 
         var exceptionResponse = ValidateRequest(request, userId);
 
@@ -59,7 +57,7 @@ public class RecoverNoteDetailCommandHandler : NoteBase, IRequestHandler<Recover
         if (userId == null)
             return new Result<bool>(ExceptionFactory.InvalidCredentialException);
         
-        if(!IsIdRightLenght(request.NoteDetailId))
+        if(!_authService.IsIdRightLenght(request.NoteDetailId))
             return new Result<bool>(ExceptionFactory.NoteNotFoundException);
 
         var hashId = _hashids.Decode(request.NoteDetailId);
