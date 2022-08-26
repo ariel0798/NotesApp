@@ -3,6 +3,7 @@ using NotesApp.Api.Common;
 using NotesApp.Api.Extensions;
 using NotesApp.ApplicationCore.Authentication.Commands.RefreshToken;
 using NotesApp.ApplicationCore.Authentication.Models;
+using NotesApp.ApplicationCore.Services.AuthService;
 
 namespace NotesApp.Api.Endpoints.Auth;
 
@@ -11,7 +12,7 @@ public class RefreshTokenEndpoint : IEndpoint
     public static void DefineEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost(ApiConstants.Authentication.EndpointNames.RefreshToken,
-            async (ISender mediator, HttpContext context ,CancellationToken ct) =>
+            async (ISender mediator,IAuthService authService, HttpContext context ,CancellationToken ct) =>
             {
                 var request = context?.Request;
                 var refreshToken = request.Cookies["refreshToken"];
@@ -23,7 +24,7 @@ public class RefreshTokenEndpoint : IEndpoint
                 if(result.IsSuccess)
                 {
                     var token = result.Match<JwtToken>(obj => obj, null);
-                    LoginEndpoint.SetRefreshToken(token,context);
+                    authService.SetRefreshToken(token,context);
                 }
 
                 var resultToken = result.Map<string>(obj => obj.Token);

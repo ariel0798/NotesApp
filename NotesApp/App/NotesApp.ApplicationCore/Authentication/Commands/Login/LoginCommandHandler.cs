@@ -4,6 +4,7 @@ using MediatR;
 using NotesApp.ApplicationCore.Authentication.Commands.RefreshToken;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
 using NotesApp.ApplicationCore.Authentication.Models;
+using NotesApp.ApplicationCore.Services.AuthService;
 using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 using NotesApp.Domain.Models;
@@ -14,15 +15,13 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand,Result<JwtToken>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IHashids _hashids;
-    
-    public LoginCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IHashids hashids)
+    private readonly IAuthService _authService;
+
+    public LoginCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher, IAuthService authService)
     {
         _unitOfWork = unitOfWork;
         _passwordHasher = passwordHasher;
-        _jwtTokenGenerator = jwtTokenGenerator;
-        _hashids = hashids;
+        _authService = authService;
     }
     public async Task<Result<JwtToken>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
@@ -34,7 +33,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand,Result<JwtToken>
         if (!_passwordHasher.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             return new Result<JwtToken>(ExceptionFactory.InvalidCredentialException);
 
-        var fullToken = await SetTokenAndRefreshToken(user,_jwtTokenGenerator,_unitOfWork, _hashids);
+        var fullToken = await _authService.SetTokenAndRefreshToken(user);
 
         return fullToken;
     }
@@ -44,22 +43,5 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand,Result<JwtToken>
         return  await _unitOfWork.Users.GetUserByEmail(email);
     }
     
-    public static async Task<JwtToken> SetTokenAndRefreshToken(User user, IJwtTokenGenerator jwtTokenGenerator,
-        IUnitOfWork unitOfWork, IHashids hashids)
-    {
-        var codeId = hashids.Encode(user.UserId);
-        var token = jwtTokenGenerator.CreateToken(user.Email, codeId);
 
-        var fullToken = jwtTokenGenerator.GenerateRefreshToken();
-        fullToken.Token = token;
-
-        user.RefreshToken = fullToken.RefreshToken;
-        user.TokenCreated = fullToken.Created;
-        user.TokenExpires = fullToken.Expires;
-        
-        unitOfWork.Users.Update(user);
-        await unitOfWork.Save();
-
-        return fullToken;
-    }
 }

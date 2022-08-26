@@ -4,6 +4,7 @@ using MediatR;
 using NotesApp.ApplicationCore.Authentication.Commands.Login;
 using NotesApp.ApplicationCore.Authentication.Interfaces;
 using NotesApp.ApplicationCore.Authentication.Models;
+using NotesApp.ApplicationCore.Services.AuthService;
 using NotesApp.Domain.Errors.Exceptions.Factory;
 using NotesApp.Domain.Interfaces;
 using NotesApp.Domain.Models;
@@ -13,14 +14,12 @@ namespace NotesApp.ApplicationCore.Authentication.Commands.RefreshToken;
 public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand,Result<JwtToken>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IHashids _hashids;
-    
-    public RefreshTokenCommandHandler(IUnitOfWork unitOfWork, IJwtTokenGenerator jwtTokenGenerator, IHashids hashids)
+    private readonly IAuthService _authService;
+
+    public RefreshTokenCommandHandler(IUnitOfWork unitOfWork, IAuthService authService)
     {
         _unitOfWork = unitOfWork;
-        _jwtTokenGenerator = jwtTokenGenerator;
-        _hashids = hashids;
+        _authService = authService;
     }
     
     public async Task<Result<JwtToken>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
@@ -36,7 +35,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand,Re
         if (user.TokenExpires < DateTime.Now)
             return new Result<JwtToken>(ExceptionFactory.InvalidCredentialException);
         
-        var fullToken = await LoginCommandHandler.SetTokenAndRefreshToken(user, _jwtTokenGenerator,_unitOfWork, _hashids);
+        var fullToken = await _authService.SetTokenAndRefreshToken(user);
         
         return fullToken;
     }
