@@ -4,6 +4,7 @@ using NotesApp.Domain.Interfaces;
 using NotesApp.Domain.Models;
 using NotesApp.Infrastructure.Context;
 using NotesApp.Infrastructure.DatabaseProvider;
+using System.Data.SqlClient;
 
 namespace NotesApp.Infrastructure.Repositories;
 
@@ -12,7 +13,7 @@ public class NoteRepository :  GenericRepository<Note>, INoteRepository
     private readonly IDatabaseProvider _databaseProvider;
     private readonly DbSet<NoteDetail> _tableNoteDetails;
 
-    public NoteRepository(NotesAppDbContext context, IDatabaseProvider databaseProvider) 
+        public NoteRepository(NotesAppDbContext context, IDatabaseProvider databaseProvider) 
         : base(context)
     {
         _databaseProvider = databaseProvider;
@@ -70,6 +71,22 @@ public class NoteRepository :  GenericRepository<Note>, INoteRepository
         _tableNoteDetails.Remove(noteDetail);
         
         return true;
+    }
+
+    public async Task DeleteNoteDetailById(int noteDetailId)
+    {
+       var noteDetail = await _tableNoteDetails.FindAsync(noteDetailId);
+       _tableNoteDetails.Remove(noteDetail!);
+    }
+
+    public async Task<IEnumerable<NoteDetail>> GetExpiredNoteDetails(int days)
+    {
+        await using var connection = _databaseProvider.GetConnection();
+
+        var query = "SELECT * From NoteDetail " +
+                    "where IsDeleted = 1 and DeletedDate <  dateadd(day,-@Days, getdate())";
+
+        return await connection.QueryAsync<NoteDetail>(query, new { Days = days });
     }
 
     private async Task<NoteDetail> GetNoteDetailByIdAndUserId(int noteDetailId, int userId)

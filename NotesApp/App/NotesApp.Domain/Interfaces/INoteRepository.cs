@@ -10,4 +10,6 @@ public interface INoteRepository : IGenericRepository<Note>
     Task<NoteDetail> AddNoteDetail(NoteDetail noteDetail);
     void UpdateNoteDetail(NoteDetail noteDetail);
     Task<bool> DeleteNoteDetail(int noteDetailId, int userId);
+    Task DeleteNoteDetailById(int noteDetailId);
+    Task<IEnumerable<NoteDetail>> GetExpiredNoteDetails(int days);
 }
