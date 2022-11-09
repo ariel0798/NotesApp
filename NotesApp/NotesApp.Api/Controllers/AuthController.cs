@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NotesApp.Api.Extensions;
+using NotesApp.Api.Filters;
 using NotesApp.ApplicationCore.Authentication.Commands.Login;
 using NotesApp.ApplicationCore.Authentication.Commands.RefreshToken;
 using NotesApp.ApplicationCore.Authentication.Commands.Register;
@@ -22,7 +23,7 @@ public class AuthController : Controller
         _mapper = mapper;
         _mediator = mediator;
     }
-
+    [PermissionsFilter]
     [HttpPost(ApiRoutes.Authentication.Register)]
     public async Task<IActionResult> Register(RegisterUserRequest registerUserRequest, CancellationToken cancellationToken)
     {

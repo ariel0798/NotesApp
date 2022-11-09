@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesApp.ApplicationCore", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesApp.Infrastructure.Data", "NotesApp.Infrastructure.Data\NotesApp.Infrastructure.Data.csproj", "{69734AD0-1EC4-44ED-9B91-D971C65062DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesApp.MinApi", "NotesApp.MinApi\NotesApp.MinApi.csproj", "{F3A3FB3F-1B3A-4068-A8D8-401FF2D32080}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{69734AD0-1EC4-44ED-9B91-D971C65062DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69734AD0-1EC4-44ED-9B91-D971C65062DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69734AD0-1EC4-44ED-9B91-D971C65062DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3A3FB3F-1B3A-4068-A8D8-401FF2D32080}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3A3FB3F-1B3A-4068-A8D8-401FF2D32080}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3A3FB3F-1B3A-4068-A8D8-401FF2D32080}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3A3FB3F-1B3A-4068-A8D8-401FF2D32080}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
